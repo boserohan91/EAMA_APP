@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Spontan</string>
+    <string name="emailaddress">Enter your Email Address</string>
+    <string name="password">Enter a password</string>
+    <string name="repassword">Re-enter your password</string>
+    <string name="phone">Enter your phone number</string>
+    <string-array name="activities">
+        <item>Biking</item>
+        <item>Hiking</item>
+        <item>Football</item>
+        <item>Badminton</item>
+        <item>Basketball</item>
+        <item>Dancing</item>
+        <item>Movies</item>
+        <item>Cooking</item>
+        <item>Food Explorer</item>
+        <item>Clubbing</item>
+        <item>Concerts</item>
+        <item>Theatre </item>
+    </string-array>
+</resources>
