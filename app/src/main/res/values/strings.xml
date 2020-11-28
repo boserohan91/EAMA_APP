@@ -2,8 +2,11 @@
     <string name="app_name">Spontan</string>
     <string name="emailaddress">Enter your Email Address</string>
     <string name="password">Enter a password</string>
+    <string name="loginpassword">Enter your password</string>
     <string name="repassword">Re-enter your password</string>
     <string name="phone">Enter your phone number</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string-array name="activities">
         <item>Biking</item>
         <item>Hiking</item>
