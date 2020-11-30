@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import java.util.Calendar;
 
 public class GroupCreation extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    Button createGrp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,20 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
                 datePicker.show(getSupportFragmentManager(), "date_picker");
             }
         });
+
+        createGrp = (Button) findViewById(R.id.createBtn);
+
+        createGrp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                open_group();
+            }
+        });
+    }
+
+    public void open_group(){
+        Intent intent = new Intent(this, Group.class);
+        startActivity(intent);
     }
 
     @Override
