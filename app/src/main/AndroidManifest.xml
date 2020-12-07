@@ -2,14 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.spontan">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Spontan">
-        <activity android:name=".Group"></activity>
+        android:theme="@style/Theme.Spontan"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".LocationList"></activity>
+        <activity android:name=".Group" />
         <activity android:name=".GroupCreation" />
         <activity android:name=".CentralDrawer" />
         <activity android:name=".SignIn" />

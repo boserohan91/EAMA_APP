@@ -28,4 +28,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <Button
+        android:id="@+id/searchBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Search"
+        app:layout_constraintEnd_toEndOf="@+id/editTextSearchActivity"
+        app:layout_constraintStart_toStartOf="@+id/editTextSearchActivity"
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearchActivity" />
+
+    <EditText
+        android:id="@+id/editTextSearchActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Enter Activity Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grpCreateBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>
