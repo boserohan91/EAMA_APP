@@ -18,23 +18,41 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class SearchActivityFragment extends Fragment {
 
 
+    public static ArrayList<LocationsHelperClass> locationsList = new ArrayList<>();
+    ArrayList<LocationsHelperClass> groupsList = new ArrayList<>();
+    RecyclerView locationsRecycler;
+    RecyclerView groupsRecycler;
+    LocationsRecViewAdapter locationsAdapter;
+    RecyclerView.Adapter groupsAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.search_activity, container, false);
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button createGroupBtn = (Button) getView().findViewById(R.id.grpCreateBtn);
+
+
+        View view = inflater.inflate(R.layout.search_activity, container, false);
+        //locationsList.add(new LocationsHelperClass("Rohan Basketball","Zellescher Weg", "club"));
+        System.out.println("Locations List 1: "+locationsList);
+        locationsRecycler = view.findViewById(R.id.locationsRecyclerView);
+        locationsRecycler.setHasFixedSize(true);
+        locationsRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL , false ));
+        locationsAdapter = new LocationsRecViewAdapter(locationsList);
+        locationsRecycler.setAdapter(locationsAdapter);
+
+        Button createGroupBtn = (Button) view.findViewById(R.id.grpCreateBtn);
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,14 +63,24 @@ public class SearchActivityFragment extends Fragment {
 
         });
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         // use places Google API to find places nearby user where searched activity can be performed and return list view
-        Button searchActivityBtn = (Button) getView().findViewById(R.id.searchBtn);
+        Button searchActivityBtn = (Button) view.findViewById(R.id.searchBtn);
         searchActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // use network location provider or gps based based on battery level & connectivity
+                locationsList.clear();
+                locationsAdapter.locationsList.clear();
+
+                // use network location provider or gps, based on battery level & connectivity
                 getPlaces();
+
             }
         });
 
@@ -79,7 +107,8 @@ public class SearchActivityFragment extends Fragment {
         new ServerClass().sendGETRequest(getContext(), URL, new ServerResponseCallback() {
             @Override
             public void onJSONResponse(JSONObject jsonObject) {
-                System.out.println(jsonObject.toString());
+                //System.out.println(jsonObject.toString());
+                parseJSONResponse(jsonObject);
             }
 
             @Override
@@ -92,6 +121,31 @@ public class SearchActivityFragment extends Fragment {
 
             }
         });
+
+    }
+
+    public void parseJSONResponse(JSONObject jsonObject) {
+        try{
+            JSONArray results = jsonObject.getJSONArray("results");
+            for(int i=0;i<results.length();i++){
+                JSONObject place_object = results.getJSONObject(i);
+                String name = place_object.getString("name");
+                String address = place_object.getString("formatted_address");
+                String types = place_object.getJSONArray("types").toString();
+                locationsList.add(new LocationsHelperClass(name, address, types));
+                System.out.println("Location Name: "+locationsList.get(i).getLocationName());
+
+
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        finally {
+            locationsAdapter.locationsList.addAll(locationsList);
+
+            locationsAdapter.notifyDataSetChanged();
+        }
+
 
     }
 

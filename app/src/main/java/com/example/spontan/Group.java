@@ -29,6 +29,7 @@ public class Group extends AppCompatActivity {
         participantRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL , false ));
 
         ArrayList<ParticipantHelperClass> participantList = new ArrayList<>();
+        // get participants from DB and add them to participantList ArrayList
         participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, "Rohan Bose"));
         participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, "Lipsa Pradhan"));
         participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, "Participant Name"));
