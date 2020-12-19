@@ -50,10 +50,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/asap"
-        android:text="Location"
+        android:text="Location Name"
         android:textColor="@color/prmColor"
         android:textSize="18dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword2"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextLocationName"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
     <TextView
@@ -66,7 +66,7 @@
         android:textColor="@color/prmColor"
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="@+id/datePickerBtn"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextLocationAddress" />
 
     <TextView
         android:id="@+id/textView10"
@@ -99,7 +99,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/editTextTextLocationName"
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
@@ -108,8 +108,8 @@
         android:drawablePadding="12dp"
         android:ems="10"
         android:fontFamily="@font/asap"
-        android:hint="Enter Location"
-        android:inputType="textPassword"
+        android:hint="Enter Location Name"
+        android:inputType="textPersonName"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +138,7 @@
         android:id="@+id/createBtn"
         android:layout_width="200dp"
         android:layout_height="40dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/custom_button"
         android:fontFamily="@font/asap"
         android:text="Create"
@@ -154,7 +154,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword2"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextLocationName"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         app:srcCompat="@drawable/ic_calender_prm" />
 
@@ -169,6 +169,36 @@
         app:layout_constraintBottom_toBottomOf="@+id/datePickerBtn"
         app:layout_constraintStart_toEndOf="@+id/datePickerBtn"
         app:layout_constraintTop_toTopOf="@+id/datePickerBtn" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/asap"
+        android:text="Location Address"
+        android:textColor="@color/prmColor"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextLocationAddress"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextLocationName" />
+
+    <EditText
+        android:id="@+id/editTextTextLocationAddress"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/custom_input"
+        android:drawableStart="@drawable/ic_lock_prm"
+        android:drawablePadding="12dp"
+        android:ems="10"
+        android:fontFamily="@font/asap"
+        android:hint="Enter Location Address"
+        android:inputType="textPersonName"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

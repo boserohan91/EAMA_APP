@@ -1,8 +1,11 @@
 package com.example.spontan;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,11 +44,12 @@ public class LocationsRecViewAdapter extends RecyclerView.Adapter<LocationsRecVi
         return locationsList.size();
     }
 
-    public static class LocationsViewHolder extends RecyclerView.ViewHolder{
+    public class LocationsViewHolder extends RecyclerView.ViewHolder{
 
         TextView locationName;
         TextView locationAddress;
         TextView locationDescription;
+        ImageButton locationGrpCreation;
 
 
         public LocationsViewHolder(@NonNull View itemView) {
@@ -54,6 +58,24 @@ public class LocationsRecViewAdapter extends RecyclerView.Adapter<LocationsRecVi
             locationName = itemView.findViewById(R.id.locationName);
             locationAddress = itemView.findViewById(R.id.locationAddress);
             locationDescription = itemView.findViewById(R.id.locationDescription);
+            locationGrpCreation = itemView.findViewById(R.id.locationGrpCreateBtn);
+
+            locationGrpCreation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        LocationsHelperClass location = locationsList.get(position);
+                        Context context = itemView.getContext();
+                        Intent intent = new Intent(context, GroupCreation.class);
+                        System.out.println("Selected loc Name: " +location.locationName);
+                        System.out.println("Selected loc Address: " +location.locationAddress);
+                        intent.putExtra("locationName", location.locationName);
+                        intent.putExtra("locationAddress", location.locationAddress);
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
     }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,7 +22,20 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_creation);
+        View view = getLayoutInflater().inflate(R.layout.activity_group_creation,null);
+
+        Bundle extras = getIntent().getExtras();
+        System.out.println("Checking bundle extras inside onCreate");
+        if(extras != null){
+
+            EditText locName = view.findViewById(R.id.editTextTextLocationName);
+            EditText locAddr = view.findViewById(R.id.editTextTextLocationAddress);
+            System.out.println("Location Name in extras:"+ extras.getString("locationName"));
+            System.out.println("Location Address in extras:"+ extras.getString("locationAddress"));
+            locName.setText(extras.getString("locationName"));
+            locAddr.setText(extras.getString("locationAddress"));
+        }
+        setContentView(view);
 
         ImageButton dtPickerBtn = (ImageButton) findViewById(R.id.datePickerBtn);
         dtPickerBtn.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +55,12 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
             }
         });
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        LocationsHelperClass loc = data.
+//    }
 
     public void open_group(){
         Intent intent = new Intent(this, Group.class);
