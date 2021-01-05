@@ -51,6 +51,8 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         createGrp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //save to DB and open group page
+                // pass on data of group fields as Intent extras
                 open_group();
             }
         });
@@ -63,7 +65,25 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
 //    }
 
     public void open_group(){
+
+
         Intent intent = new Intent(this, Group.class);
+        EditText locName = (EditText)findViewById(R.id.editTextTextLocationName);
+        EditText locAddr = (EditText)findViewById(R.id.editTextTextLocationAddress);
+        EditText grpDesc = (EditText) findViewById(R.id.editTextTextDescription);
+        EditText actName = (EditText) findViewById(R.id.editTextTextActivityName);
+        TextView dateText = (TextView) findViewById(R.id.dateText);
+        EditText timeText = (EditText) findViewById(R.id.timeText);
+
+        // save group on database, generate group ID and put it in intent extras
+
+        intent.putExtra("locationName", locName.getText().toString());
+        intent.putExtra("locationAddress", locAddr.getText().toString());
+        intent.putExtra("grpDescription", grpDesc.getText().toString());
+        intent.putExtra("activityName", actName.getText().toString());
+        intent.putExtra("date", dateText.getText().toString());
+        intent.putExtra("time", timeText.getText().toString());
+
         startActivity(intent);
     }
 

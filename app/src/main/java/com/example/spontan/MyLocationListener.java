@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -26,11 +27,13 @@ public class MyLocationListener implements LocationListener {
     LocationManager locationManager;
     Context mContext;
     Activity mActivity;
+    BatteryManager batteryManager;
 
     public MyLocationListener(Context context, Activity activity) {
         mContext = context;
         mActivity = activity;
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        batteryManager = (BatteryManager) mContext.getSystemService(Context.BATTERY_SERVICE);
         location = new Location("initial");
         location.setLatitude(0);
         location.setLongitude(0);
@@ -45,6 +48,12 @@ public class MyLocationListener implements LocationListener {
             // get network status
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             Log.v("isNetworkEnabled", "=" + isNetworkEnabled);
+
+            int batLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+            System.out.println("Battery Percentage: "+ batLevel);
+            if (batLevel <= 20){
+                isGPSEnabled = false;
+            }
 
             if (isGPSEnabled == false && isNetworkEnabled == false) {
 

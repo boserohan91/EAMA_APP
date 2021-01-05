@@ -29,7 +29,7 @@
         android:text="Activity Name"
         android:textColor="@color/prmColor"
         android:textSize="18dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextActivityName"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
@@ -41,8 +41,8 @@
         android:text="Description"
         android:textColor="@color/prmColor"
         android:textSize="18dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+        app:layout_constraintStart_toStartOf="@+id/editTextTextDescription"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextActivityName" />
 
     <TextView
         android:id="@+id/textView3"
@@ -54,7 +54,7 @@
         android:textColor="@color/prmColor"
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="@+id/editTextTextLocationName"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextDescription" />
 
     <TextView
         android:id="@+id/textView4"
@@ -81,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/datePickerBtn" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/editTextTextDescription"
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
@@ -91,7 +91,7 @@
         android:ems="10"
         android:fontFamily="@font/asap"
         android:hint="Give a small description"
-        android:inputType="textPassword"
+        android:inputType="textPersonName"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -117,7 +117,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/editTextTextActivityName"
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
@@ -127,7 +127,7 @@
         android:ems="10"
         android:fontFamily="@font/asap"
         android:hint="Enter name of activity"
-        android:inputType="textEmailAddress"
+        android:inputType="textPersonName"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -199,6 +199,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+    <EditText
+        android:id="@+id/timeText"
+        android:layout_width="120dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/textView10"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toTopOf="@+id/textView10" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

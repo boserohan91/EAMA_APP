@@ -7,7 +7,7 @@
     tools:context=".Group">
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/textViewGrpName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/textViewGrpName"
         tools:layout_editor_absoluteX="175dp">
 
         <LinearLayout
@@ -72,11 +72,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/asap"
                 android:text="Location"
                 android:textColor="@color/prmColor"
-                android:textSize="18dp"
-                android:layout_marginTop="8dp"/>
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/locationText"

@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -16,7 +19,33 @@ public class Group extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group);
+        View view = getLayoutInflater().inflate(R.layout.activity_group,null);
+
+        Bundle extras = getIntent().getExtras();
+        System.out.println("Checking bundle extras inside onCreate");
+        if(extras != null){
+
+            TextView grpDesc = view.findViewById(R.id.descriptionText);
+            TextView grpLoc = view.findViewById(R.id.locationText);
+            TextView grpDtTime = view.findViewById(R.id.datetimeText);
+            TextView grpName = view.findViewById(R.id.textViewGrpName);
+
+
+//            System.out.println("Location Name in extras:"+ extras.getString("locationName"));
+//            System.out.println("Location Address in extras:"+ extras.getString("locationAddress"));
+            String desc = extras.getString("grpDescription");
+            String location = extras.getString("locationName") + ", " + extras.getString("locationAddress");
+            String dtTime = extras.getString("date") +  ", " + extras.getString("time");
+            String grpNm = "Group: " + extras.getString("activityName");
+            grpDesc.setText(desc);
+            grpLoc.setText(location);
+            grpDtTime.setText(dtTime);
+            grpName.setText(grpNm);
+
+
+        }
+        setContentView(view);
+
 
         participantRecycler = findViewById(R.id.participantRecycler);
 

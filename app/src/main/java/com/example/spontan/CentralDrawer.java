@@ -3,13 +3,20 @@ package com.example.spontan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +26,8 @@ public class  CentralDrawer extends AppCompatActivity implements NavigationView.
 
     private DrawerLayout drawer;
     private TextView optionsBtn;
+    private NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +38,7 @@ public class  CentralDrawer extends AppCompatActivity implements NavigationView.
 //        setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.central_drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 //        drawer.addDrawerListener(toggle);
@@ -46,10 +55,30 @@ public class  CentralDrawer extends AppCompatActivity implements NavigationView.
             public void onClick(View v) {
                 if(drawer.isDrawerVisible(GravityCompat.START))
                     drawer.closeDrawer(GravityCompat.START);
-                else
+                else{
                     drawer.openDrawer(GravityCompat.START);
+                }
+
             }
         });
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        System.out.println("Inside onOptionsItemSelected");
+        navigationView.setCheckedItem(R.id.nav_dark_mode);
+        navigationView.getMenu().performIdentifierAction(R.id.nav_dark_mode, 0);
+
+        if(drawer.isDrawerVisible(GravityCompat.START)){
+            System.out.println("Drawer visible returns true on onOptionsItemSelected");
+            return true;
+        }
+        else {
+            System.out.println("Drawer visible returns super() on onOptionsItemSelected");
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -57,7 +86,6 @@ public class  CentralDrawer extends AppCompatActivity implements NavigationView.
         switch (item.getItemId()){
             case R.id.nav_profile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
-
                 break;
             case R.id.nav_search:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SearchActivityFragment()).commit();
@@ -71,6 +99,17 @@ public class  CentralDrawer extends AppCompatActivity implements NavigationView.
             case R.id.nav_settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.nav_dark_mode:
+                if (isNightModeActive(getApplicationContext())){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    Toast.makeText(getApplicationContext(), "Dark Mode Disabled", Toast.LENGTH_SHORT);
+                }
+                else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    Toast.makeText(getApplicationContext(), "Dark Mode Enabled", Toast.LENGTH_SHORT);
+                }
+                break;
+
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -84,5 +123,27 @@ public class  CentralDrawer extends AppCompatActivity implements NavigationView.
         else{
             super.onBackPressed();
         }
+    }
+
+    public static boolean isNightModeActive(Context context) {
+        int defaultNightMode = AppCompatDelegate.getDefaultNightMode();
+        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            return true;
+        }
+        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            return false;
+        }
+
+        int currentNightMode = context.getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                return false;
+            case Configuration.UI_MODE_NIGHT_YES:
+                return true;
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                return false;
+        }
+        return false;
     }
 }

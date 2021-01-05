@@ -27,8 +27,8 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/asap"
         android:text="Email"
-        android:textSize="18dp"
         android:textColor="@color/prmColor"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -38,10 +38,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Password"
-        android:textSize="18dp"
-        android:textColor="@color/prmColor"
         android:fontFamily="@font/asap"
+        android:text="Password"
+        android:textColor="@color/prmColor"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
@@ -51,15 +51,15 @@
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
-        android:drawableStart="@drawable/ic_lock_prm"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
         android:background="@drawable/custom_input"
+        android:drawableStart="@drawable/ic_lock_prm"
         android:drawablePadding="12dp"
         android:ems="10"
         android:fontFamily="@font/asap"
         android:hint="@string/loginpassword"
         android:inputType="textPassword"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -69,15 +69,15 @@
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="5dp"
-        android:drawableStart="@drawable/ic_email_prm"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
         android:background="@drawable/custom_input"
+        android:drawableStart="@drawable/ic_email_prm"
         android:drawablePadding="12dp"
         android:ems="10"
         android:fontFamily="@font/asap"
         android:hint="@string/emailaddress"
         android:inputType="textEmailAddress"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -100,9 +100,9 @@
         android:layout_marginStart="8dp"
         android:clickable="true"
         android:fontFamily="@font/asap"
-        android:textStyle="bold"
         android:text="Sign Up"
         android:textColor="@color/prmColor"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/textView5" />
 
@@ -126,9 +126,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/asap"
         android:text="Or"
         android:textStyle="bold"
-        android:fontFamily="@font/asap"
         app:layout_constraintEnd_toEndOf="@+id/loginBtn"
         app:layout_constraintStart_toStartOf="@+id/loginBtn"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -138,9 +138,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/asap"
         android:text="Sign In with Google"
         android:textStyle="bold"
-        android:fontFamily="@font/asap"
         app:layout_constraintEnd_toEndOf="@+id/textView8"
         app:layout_constraintStart_toStartOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
@@ -150,10 +150,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@drawable/sign_in_with_google_icon_3_jpg"
         app:layout_constraintEnd_toEndOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView9"
-        android:background="@drawable/sign_in_with_google_icon_3_jpg"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <TextView
         android:id="@+id/textView12"
@@ -162,8 +162,8 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/asap"
         android:text="Forgot Password?"
-        android:textStyle="bold"
         android:textColor="@color/prmColor"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
