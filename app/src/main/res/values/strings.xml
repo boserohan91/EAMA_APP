@@ -14,11 +14,12 @@
         <item>Badminton</item>
         <item>Basketball</item>
         <item>Dancing</item>
+        <item>Swimming</item>
         <item>Movies</item>
         <item>Cooking</item>
         <item>Food Explorer</item>
         <item>Clubbing</item>
         <item>Concerts</item>
-        <item>Theatre </item>
+        <item>Theatre</item>
     </string-array>
 </resources>

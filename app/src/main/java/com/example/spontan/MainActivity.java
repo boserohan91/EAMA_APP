@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Constants.buildActivityHashMap();
+
         continueBtn = (Button) findViewById(R.id.loginBtn);
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
