@@ -1,5 +1,10 @@
 package com.example.spontan;
 
+import android.content.Context;
+import android.content.res.Configuration;
+
+import androidx.appcompat.app.AppCompatDelegate;
+
 import java.util.HashMap;
 
 public class Constants {
@@ -30,6 +35,28 @@ public class Constants {
         activities.put("Concerts", "Concerts");
         activities.put("Theatre", "Theatre Hall");
         System.out.println("Interests HashMap built");
+    }
+
+    public static boolean isNightModeActive(Context context) {
+        int defaultNightMode = AppCompatDelegate.getDefaultNightMode();
+        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            return true;
+        }
+        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            return false;
+        }
+
+        int currentNightMode = context.getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                return false;
+            case Configuration.UI_MODE_NIGHT_YES:
+                return true;
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                return false;
+        }
+        return false;
     }
 
 }

@@ -101,7 +101,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_dark_mode:
-                if (isNightModeActive(getApplicationContext())){
+                if (Constants.isNightModeActive(getApplicationContext())){
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     Toast.makeText(getApplicationContext(), "Dark Mode Disabled", Toast.LENGTH_SHORT);
                 }
@@ -126,27 +126,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
         }
     }
 
-    public static boolean isNightModeActive(Context context) {
-        int defaultNightMode = AppCompatDelegate.getDefaultNightMode();
-        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            return true;
-        }
-        if (defaultNightMode == AppCompatDelegate.MODE_NIGHT_NO) {
-            return false;
-        }
 
-        int currentNightMode = context.getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                return false;
-            case Configuration.UI_MODE_NIGHT_YES:
-                return true;
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                return false;
-        }
-        return false;
-    }
 
     @Override
     public void setResult(String str) {

@@ -51,7 +51,8 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         createGrp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //save to DB and open group page
+                //save to local DB and open group page
+                // background process should sync between local DB and Firebase server
                 // pass on data of group fields as Intent extras
                 open_group();
             }

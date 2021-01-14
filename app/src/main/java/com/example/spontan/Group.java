@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -59,6 +60,20 @@ public class Group extends AppCompatActivity {
 
         ArrayList<ParticipantHelperClass> participantList = new ArrayList<>();
         // get participants from DB and add them to participantList ArrayList
+        // Check Network Connection properties from ConnectivityMonitor class and switch to local DB or apply lazy loading of participant images
+        Context context = getApplicationContext();
+        if (ConnectivityMonitor.isNetworkConnected(context)){
+            if (ConnectivityMonitor.getConnectionSpeed(context).equals("FAST")){
+                //retrieve data normally from Firebase Server
+            }
+            else {
+                //retrieve participant names only
+                //download images later
+            }
+        }
+        else{
+            //retrieve data from local DB
+        }
         participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, "Rohan Bose"));
         participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, "Lipsa Pradhan"));
         participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, "Participant Name"));

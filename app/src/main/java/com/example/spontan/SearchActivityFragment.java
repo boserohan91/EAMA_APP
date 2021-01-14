@@ -44,6 +44,11 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        locationsList.clear();
+        if(locationsAdapter!=null){
+            locationsAdapter.locationsList.clear();
+            locationsAdapter.notifyDataSetChanged();
+        }
 
 
         View view = inflater.inflate(R.layout.search_activity, container, false);

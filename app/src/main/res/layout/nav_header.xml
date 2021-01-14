@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="176dp"
     android:orientation="vertical"
-    android:background="@drawable/custom_bg"
+    android:background="@color/white"
     android:gravity="bottom"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/Theme.Spontan">
 
     <ImageView
         android:layout_width="wrap_content"

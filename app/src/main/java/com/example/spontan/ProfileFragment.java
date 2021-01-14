@@ -16,4 +16,16 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.profile, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // retrieve profile data from server
+        if (ConnectivityMonitor.isNetworkConnected(getContext())){
+            // from server
+        }
+        else{
+            // from local DB
+        }
+    }
 }
