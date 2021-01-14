@@ -27,7 +27,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SearchActivityFragment extends Fragment {
+public class SearchActivityFragment extends Fragment implements RecommendedActivityText {
 
 
     public static ArrayList<LocationsHelperClass> locationsList = new ArrayList<>();
@@ -36,6 +36,9 @@ public class SearchActivityFragment extends Fragment {
     RecyclerView groupsRecycler;
     LocationsRecViewAdapter locationsAdapter;
     RecyclerView.Adapter groupsAdapter;
+    EditText searchActivityEditText;
+    String activityText;
+    public Button searchActivityBtn;
 
     @Nullable
     @Override
@@ -51,6 +54,9 @@ public class SearchActivityFragment extends Fragment {
         locationsRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL , false ));
         locationsAdapter = new LocationsRecViewAdapter(locationsList);
         locationsRecycler.setAdapter(locationsAdapter);
+
+        searchActivityEditText = (EditText) view.findViewById(R.id.editTextSearchActivity);
+        searchActivityEditText.setText(activityText);
 
         Button createGroupBtn = (Button) view.findViewById(R.id.grpCreateBtn);
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +76,8 @@ public class SearchActivityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         // use places Google API to find places nearby user where searched activity can be performed and return list view
-        Button searchActivityBtn = (Button) view.findViewById(R.id.searchBtn);
+        searchActivityBtn = (Button) view.findViewById(R.id.searchBtn);
+
         searchActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,13 +91,16 @@ public class SearchActivityFragment extends Fragment {
             }
         });
 
+        if(searchActivityEditText != null){
+            searchActivityBtn.performClick();
+        }
         // also return all the open groups for the activity
     }
 
     public void getPlaces(){
 
-        EditText searchActivityText = (EditText) getView().findViewById(R.id.editTextSearchActivity);
-        String searchedActivity = searchActivityText.getText().toString() + "+court";
+        searchActivityEditText = (EditText) getView().findViewById(R.id.editTextSearchActivity);
+        String searchedActivity = Constants.activities.get(searchActivityEditText.getText().toString());
         double latitude = 0.0;
         double longitude = 0.0;
         MyLocationListener myLocationListener = new MyLocationListener(getContext(), getActivity());
@@ -150,4 +160,14 @@ public class SearchActivityFragment extends Fragment {
     }
 
 
+    @Override
+    public void setResult(String str) {
+        //searchActivityText.setText(str);
+        activityText = str;
+    }
+
+    @Override
+    public void setFragmentResult(Fragment fragment, String str) {
+        // leave empty
+    }
 }

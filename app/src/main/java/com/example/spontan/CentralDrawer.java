@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -22,7 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class  CentralDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class CentralDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecommendedActivityText {
 
     private DrawerLayout drawer;
     private TextView optionsBtn;
@@ -145,5 +146,15 @@ public class  CentralDrawer extends AppCompatActivity implements NavigationView.
                 return false;
         }
         return false;
+    }
+
+    @Override
+    public void setResult(String str) {
+        // leave empty
+    }
+
+    @Override
+    public void setFragmentResult(Fragment fragment, String str) {
+        ((RecommendedActivityText)fragment).setResult(str);
     }
 }

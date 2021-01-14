@@ -2,6 +2,7 @@ package com.example.spontan;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,6 +32,8 @@ public class  ServerClass {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, "onErrorResponse: ",error);
+                        Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show();
+
                     }
                 }
         );
@@ -56,6 +59,7 @@ public class  ServerClass {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, "onErrorResponse: ",error);
+                        Toast.makeText(context,error.toString(),Toast.LENGTH_SHORT).show();
                     }
                 }
         );

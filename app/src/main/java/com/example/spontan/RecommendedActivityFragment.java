@@ -10,6 +10,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +23,8 @@ import java.util.Set;
 
 public class RecommendedActivityFragment extends Fragment {
 
-    //public ArrayList<String> recommendedActivities;
+    public ArrayList<String> recommendedList;
+    RecyclerView recommendedRecyclerView;
     public ArrayList<String> otherRecActivities = new ArrayList<String>();
 
     @Nullable
@@ -36,6 +39,10 @@ public class RecommendedActivityFragment extends Fragment {
         getWeatherData();
         //choose among interested activities depending on weather conditions
         // for that map interested activities to weather conditions first
+        recommendedRecyclerView  = view.findViewById(R.id.recommendedActivityRecView);
+
+
+
     }
 
     public void getWeatherData(){
@@ -190,9 +197,13 @@ public class RecommendedActivityFragment extends Fragment {
             }
         }
 
+        recommendedList = new ArrayList<String>(recommendedActivities);
+
+        RecommendedRecViewAdapter recommendedRecViewAdapter = new RecommendedRecViewAdapter(getContext(), getActivity() ,recommendedList);
+        recommendedRecyclerView.setAdapter(recommendedRecViewAdapter);
+        recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         }
-
-
 
 
 }
