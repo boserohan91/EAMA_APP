@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +25,12 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class CentralDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecommendedActivityText {
+public class CentralDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, RecommendedActivityText {
 
     private DrawerLayout drawer;
-    private TextView optionsBtn;
+    private TextView optionsBtn, name, email;
     private NavigationView navigationView;
+    DbHelper myDb;
 
 
     @Override
@@ -37,12 +40,48 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-
+         myDb = Constants.getMyDBHelper(this);
         drawer = (DrawerLayout) findViewById(R.id.central_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        TextView name = (TextView) findViewById(R.id.textViewNavName);
-        TextView email = (TextView) findViewById(R.id.textViewNavEmail);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+                name = (TextView) drawerView.findViewById(R.id.textViewNavName);
+                email = (TextView) drawerView.findViewById(R.id.textViewNavEmail);
+
+                Cursor res = myDb.getAllData();
+                if(res.getCount() == -1) {
+                    // show message
+                    // showMessage("Error","Nothing found");
+                    System.out.println("No data");
+                    return;
+                }
+
+                //StringBuffer buffer = new StringBuffer();
+                while (res.moveToNext()) {
+
+                    name.setText(res.getString(0));
+                    email.setText(res.getString(1));
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 //        drawer.addDrawerListener(toggle);
 //        toggle.syncState();
@@ -60,6 +99,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                     drawer.closeDrawer(GravityCompat.START);
                 else{
                     drawer.openDrawer(GravityCompat.START);
+
                 }
 
             }
@@ -138,5 +178,25 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
     @Override
     public void setFragmentResult(Fragment fragment, String str) {
         ((RecommendedActivityText)fragment).setResult(str);
+    }
+
+    @Override
+    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+    }
+
+    @Override
+    public void onDrawerOpened(@NonNull View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerClosed(@NonNull View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
     }
 }
