@@ -68,6 +68,26 @@ public class DbHelper extends SQLiteOpenHelper {
         else
             return true;
     }
+
+    public boolean insertDataGroupCreation(String GroupName, String description, String locationName , String  locationAddress,String date, String time ){
+
+        SQLiteDatabase DB = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("GroupName", GroupName );
+        contentValues.put("description", description);
+        contentValues.put("locationName", locationName);
+        contentValues.put("locationAddress", locationAddress);
+        contentValues.put("date", date);
+        contentValues.put("time", time);
+
+        long result = DB.insert("GroupDetails",null ,contentValues);
+        if(result == -1)
+            return false;
+        else
+            return true;
+    }
+
+
     public void deleteDuplicatesUI( String tableName){
 
         SQLiteDatabase DB = this.getWritableDatabase();

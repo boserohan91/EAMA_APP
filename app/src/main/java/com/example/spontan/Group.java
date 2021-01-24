@@ -31,8 +31,8 @@ public class Group extends AppCompatActivity {
             TextView grpName = view.findViewById(R.id.textViewGrpName);
 
 
-//            System.out.println("Location Name in extras:"+ extras.getString("locationName"));
-//            System.out.println("Location Address in extras:"+ extras.getString("locationAddress"));
+//           System.out.println("Location Name in extras:"+ extras.getString("locationName"));
+//           System.out.println("Location Address in extras:"+ extras.getString("locationAddress"));
             String desc = extras.getString("grpDescription");
             String location = extras.getString("locationName") + ", " + extras.getString("locationAddress");
             String dtTime = extras.getString("date") +  ", " + extras.getString("time");

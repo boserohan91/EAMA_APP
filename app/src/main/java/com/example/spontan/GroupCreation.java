@@ -12,24 +12,29 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 
 public class GroupCreation extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    DbHelper myDb;
     Button createGrp;
+    EditText  locName, locAddr, grpDesc, actName,  timeText;
+    TextView dateText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myDb = Constants.getMyDBHelper(this);
         View view = getLayoutInflater().inflate(R.layout.activity_group_creation,null);
 
         Bundle extras = getIntent().getExtras();
         System.out.println("Checking bundle extras inside onCreate");
         if(extras != null){
 
-            EditText locName = view.findViewById(R.id.editTextTextLocationName);
-            EditText locAddr = view.findViewById(R.id.editTextTextLocationAddress);
+            locName = view.findViewById(R.id.editTextTextLocationName);
+            locAddr = view.findViewById(R.id.editTextTextLocationAddress);
             System.out.println("Location Name in extras:"+ extras.getString("locationName"));
             System.out.println("Location Address in extras:"+ extras.getString("locationAddress"));
             locName.setText(extras.getString("locationName"));
@@ -54,6 +59,13 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
                 //save to local DB and open group page
                 // background process should sync between local DB and Firebase server
                 // pass on data of group fields as Intent extras
+                locName = (EditText)findViewById(R.id.editTextTextLocationName);
+                locAddr = (EditText)findViewById(R.id.editTextTextLocationAddress);
+                grpDesc = (EditText) findViewById(R.id.editTextTextDescription);
+                actName = (EditText) findViewById(R.id.editTextTextActivityName);
+                dateText = (TextView) findViewById(R.id.dateText);
+                timeText = (EditText) findViewById(R.id.timeText);
+                AddDataGroupDetails();
                 open_group();
             }
         });
@@ -69,12 +81,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
 
 
         Intent intent = new Intent(this, Group.class);
-        EditText locName = (EditText)findViewById(R.id.editTextTextLocationName);
-        EditText locAddr = (EditText)findViewById(R.id.editTextTextLocationAddress);
-        EditText grpDesc = (EditText) findViewById(R.id.editTextTextDescription);
-        EditText actName = (EditText) findViewById(R.id.editTextTextActivityName);
-        TextView dateText = (TextView) findViewById(R.id.dateText);
-        EditText timeText = (EditText) findViewById(R.id.timeText);
+
 
         // save group on database, generate group ID and put it in intent extras
 
@@ -99,4 +106,21 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         dttextView.setText(currentDateString);
 
     }
+
+    public  void AddDataGroupDetails() {
+
+        String Groupname= actName.getText().toString();
+        String desc = grpDesc.getText().toString();
+        String loc = locName.getText().toString();
+        String locAdd = locAddr.getText().toString();
+        String date = dateText.getText().toString();
+        String time = timeText.getText().toString();
+        boolean isInserted = myDb.insertDataGroupCreation(Groupname, desc , loc, locAdd, date,time  );
+        if(isInserted == true)
+            Toast.makeText(GroupCreation.this,"Data Inserted",Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(GroupCreation.this,"Data not Inserted",Toast.LENGTH_LONG).show();
+    }
+
+
 }
