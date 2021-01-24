@@ -21,7 +21,7 @@ public class ConnectivityMonitor {
             return ConnectivityMonitor.connectionType(info.getType(), info.getSubtype());
         }
         else
-            return "Network Access not enabled";
+            return "NO CONNECTION";
 
     }
 
