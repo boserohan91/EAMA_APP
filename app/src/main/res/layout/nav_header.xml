@@ -15,19 +15,21 @@
         android:src="@mipmap/ic_launcher_round"/>
 
     <TextView
+        android:id="@+id/textViewNavName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/asap"
         android:paddingTop="8dp"
         android:text="Username"
-        android:textStyle="bold"
-        android:fontFamily="@font/asap"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/textViewNavEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="username@mail.com"
-        android:fontFamily="@font/asap"/>
+        android:fontFamily="@font/asap"
+        android:text="username@mail.com" />
 
 
 </LinearLayout>

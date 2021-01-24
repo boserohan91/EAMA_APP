@@ -10,7 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:background="@color/prmColor"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintHorizontal_bias="0.518"
@@ -30,6 +30,47 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="79dp"
+        android:layout_marginEnd="47dp"
+        android:text="Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/textViewEmailID"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="40dp"
+        android:text="Email id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+    <TextView
+        android:id="@+id/textViewClickEditInterestList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Edit Interest List"
+        android:textColor="@color/prmColor"
+        app:layout_constraintStart_toStartOf="@+id/textViewContactNumber"
+        app:layout_constraintTop_toBottomOf="@+id/textViewContactNumber" />
+
+    <TextView
+        android:id="@+id/textViewContactNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Contact Number"
+        app:layout_constraintStart_toStartOf="@+id/textViewEmailID"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEmailID" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

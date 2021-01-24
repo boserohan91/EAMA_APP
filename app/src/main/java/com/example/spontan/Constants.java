@@ -20,6 +20,8 @@ public class Constants {
     //Hash Map of Activities to nearby searched locations
     public static HashMap<String,String> activities = new HashMap<String,String>();
 
+    public static DbHelper myDBHelper;
+
     public static void buildActivityHashMap(){
         activities.put("Biking", "Biking");
         activities.put("Hiking", "Hiking");
@@ -59,4 +61,10 @@ public class Constants {
         return false;
     }
 
+    public static DbHelper getMyDBHelper(Context context) {
+        if (myDBHelper==null){
+            myDBHelper = new DbHelper((context));
+        }
+        return myDBHelper;
+    }
 }

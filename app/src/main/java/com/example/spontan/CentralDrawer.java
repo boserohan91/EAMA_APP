@@ -41,6 +41,8 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
         drawer = (DrawerLayout) findViewById(R.id.central_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        TextView name = (TextView) findViewById(R.id.textViewNavName);
+        TextView email = (TextView) findViewById(R.id.textViewNavEmail);
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 //        drawer.addDrawerListener(toggle);
 //        toggle.syncState();
