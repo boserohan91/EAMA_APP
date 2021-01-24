@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
         BatteryLevelReceiver batteryLevelReceiver = new BatteryLevelReceiver();
         registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+        ConnectivityStatusReceiver connectivityStatusReceiver = new ConnectivityStatusReceiver();
+        IntentFilter connectionIntentFilter = new IntentFilter();
+        connectionIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectivityStatusReceiver, connectionIntentFilter);
+
 
         Constants.buildActivityHashMap();
 

@@ -21,6 +21,24 @@ public class Constants {
     public static HashMap<String,String> activities = new HashMap<String,String>();
 
     public static DbHelper myDBHelper;
+    public static boolean connected = true;
+    public static boolean connectionFast = true;
+
+    public static void setConnected(boolean connected) {
+        Constants.connected = connected;
+    }
+
+    public static void setConnectionFast(boolean connectionFast) {
+        Constants.connectionFast = connectionFast;
+    }
+
+    public static boolean isConnected() {
+        return connected;
+    }
+
+    public static boolean isConnectionFast() {
+        return connectionFast;
+    }
 
     public static void buildActivityHashMap(){
         activities.put("Biking", "Biking");

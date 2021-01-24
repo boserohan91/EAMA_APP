@@ -34,14 +34,8 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        // retrieve profile data from server
-        if (ConnectivityMonitor.isNetworkConnected(getContext())){
-            // from server
-        }
-        else{
-            // Show all data
-            //showMessage("Data",buffer.toString());
-        }
+        // retrieve profile data from DB
+
 
         // from local DB
         Cursor res = myDb.getAllData();

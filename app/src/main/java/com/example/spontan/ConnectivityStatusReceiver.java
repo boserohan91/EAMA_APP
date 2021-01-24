@@ -1,11 +1,13 @@
 package com.example.spontan;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-public class ConnectivityMonitor {
+public class ConnectivityStatusReceiver extends BroadcastReceiver {
 
     public static boolean isNetworkConnected(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -18,7 +20,7 @@ public class ConnectivityMonitor {
         NetworkInfo info= cm.getActiveNetworkInfo();
 
         if (info!=null && info.isConnected()) {
-            return ConnectivityMonitor.connectionType(info.getType(), info.getSubtype());
+            return ConnectivityStatusReceiver.connectionType(info.getType(), info.getSubtype());
         }
         else
             return "NO CONNECTION";
@@ -60,4 +62,16 @@ public class ConnectivityMonitor {
 
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (isNetworkConnected(context)==true) {
+            Constants.setConnected(true);
+            if (getConnectionSpeed(context).equals("FAST"))
+                Constants.setConnectionFast(true);
+            else
+                Constants.setConnectionFast(false);
+        }
+        else
+            Constants.setConnected(false);
+    }
 }

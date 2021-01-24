@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -62,8 +61,8 @@ public class Group extends AppCompatActivity {
         // get participants from DB and add them to participantList ArrayList
         // Check Network Connection properties from ConnectivityMonitor class and switch to local DB or apply lazy loading of participant images
         Context context = getApplicationContext();
-        if (ConnectivityMonitor.isNetworkConnected(context)){
-            if (ConnectivityMonitor.getConnectionSpeed(context).equals("FAST")){
+        if (Constants.isConnected()){
+            if (Constants.isConnectionFast()){
                 //retrieve data normally from Firebase Server
             }
             else {
