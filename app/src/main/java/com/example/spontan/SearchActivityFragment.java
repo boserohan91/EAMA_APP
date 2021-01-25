@@ -31,11 +31,8 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
 
 
     public static ArrayList<LocationsHelperClass> locationsList = new ArrayList<>();
-    ArrayList<LocationsHelperClass> groupsList = new ArrayList<>();
     RecyclerView locationsRecycler;
-    RecyclerView groupsRecycler;
     LocationsRecViewAdapter locationsAdapter;
-    RecyclerView.Adapter groupsAdapter;
     EditText searchActivityEditText;
     String activityText;
     public Button searchActivityBtn;
@@ -63,16 +60,6 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
         searchActivityEditText = (EditText) view.findViewById(R.id.editTextSearchActivity);
         searchActivityEditText.setText(activityText);
 
-        Button createGroupBtn = (Button) view.findViewById(R.id.grpCreateBtn);
-        createGroupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), GroupCreation.class);
-                startActivity(intent);
-            }
-
-
-        });
 
         return view;
     }

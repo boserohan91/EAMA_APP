@@ -59,7 +59,7 @@ public class Group extends AppCompatActivity {
 
         ArrayList<ParticipantHelperClass> participantList = new ArrayList<>();
         // get participants from DB and add them to participantList ArrayList
-        // Check Network Connection properties from ConnectivityMonitor class and switch to local DB or apply lazy loading of participant images
+        // Check Network Connection properties from Constants knowledge base and switch to local DB or apply lazy loading of participant images
         Context context = getApplicationContext();
         if (Constants.isConnected()){
             if (Constants.isConnectionFast()){

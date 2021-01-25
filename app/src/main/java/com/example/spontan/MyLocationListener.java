@@ -49,9 +49,7 @@ public class MyLocationListener implements LocationListener {
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             Log.v("isNetworkEnabled", "=" + isNetworkEnabled);
 
-            int batLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
-            System.out.println("Battery Percentage: "+ batLevel);
-            if (batLevel <= 20){
+            if (Constants.isBatteryLevelLow()){
                 isGPSEnabled = false;
             }
 

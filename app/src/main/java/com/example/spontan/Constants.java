@@ -23,6 +23,15 @@ public class Constants {
     public static DbHelper myDBHelper;
     public static boolean connected = true;
     public static boolean connectionFast = true;
+    public static boolean batteryLevelLow = false;
+
+    public static boolean isBatteryLevelLow() {
+        return batteryLevelLow;
+    }
+
+    public static void setBatteryLevelLow(boolean batteryLevelLow) {
+        Constants.batteryLevelLow = batteryLevelLow;
+    }
 
     public static void setConnected(boolean connected) {
         Constants.connected = connected;

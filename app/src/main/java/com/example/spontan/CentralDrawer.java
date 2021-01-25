@@ -136,6 +136,9 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
             case R.id.nav_recommended:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecommendedActivityFragment()).commit();
                 break;
+            case R.id.nav_recommended_grp:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecommendedGroupFragment()).commit();
+                break;
             case R.id.nav_upcoming:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpcomingActivityFragment()).commit();
                 break;
