@@ -1,11 +1,13 @@
 package com.example.spontan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -14,8 +16,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroupCreation extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -23,6 +32,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
     Button createGrp;
     EditText  locName, locAddr, grpDesc, actName,  timeText;
     TextView dateText;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +75,15 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
                 actName = (EditText) findViewById(R.id.editTextTextActivityName);
                 dateText = (TextView) findViewById(R.id.dateText);
                 timeText = (EditText) findViewById(R.id.timeText);
-                AddDataGroupDetails();
+                //sqllite db
+                if (Constants.isConnected()){
+                    AddFire(); // firebase db
+                    AddDataGroupDetails(0);
+                }
+                else{
+                    AddDataGroupDetails(1);
+                }
+
                 open_group();
             }
         });
@@ -107,7 +125,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
 
     }
 
-    public  void AddDataGroupDetails() {
+    public  void AddDataGroupDetails(int flag) {
 
         String Groupname= actName.getText().toString();
         String desc = grpDesc.getText().toString();
@@ -115,11 +133,37 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         String locAdd = locAddr.getText().toString();
         String date = dateText.getText().toString();
         String time = timeText.getText().toString();
-        boolean isInserted = myDb.insertDataGroupCreation(Groupname, desc , loc, locAdd, date,time  );
+        boolean isInserted = myDb.insertDataGroupCreation(Groupname, desc , loc, locAdd, date,time, flag  );
         if(isInserted == true)
             Toast.makeText(GroupCreation.this,"Data Inserted",Toast.LENGTH_LONG).show();
         else
             Toast.makeText(GroupCreation.this,"Data not Inserted",Toast.LENGTH_LONG).show();
+
+    }
+    public void AddFire(){
+        Map<String, String> GroupDetails = new HashMap<>();
+        GroupDetails.put("GroupName", actName.getText().toString());
+        GroupDetails.put("ActivityName", grpDesc.getText().toString());
+        GroupDetails.put("LocName", locName.getText().toString());
+        GroupDetails.put("LocAddr", locAddr.getText().toString());
+        GroupDetails.put("Date", dateText.getText().toString());
+        GroupDetails.put("Time", timeText.getText().toString());
+        //GroupDetails.put("");
+
+        db.collection("GroupDetails")
+                .add(GroupDetails)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("TAG", "Snapshot added with ID:"  );
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("TAG", "Error");
+            }
+        });
+
     }
 
 

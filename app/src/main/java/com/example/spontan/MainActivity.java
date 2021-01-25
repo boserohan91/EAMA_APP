@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         this.deleteDatabase("ActivityFinder.db") ;
         this.deleteDatabase("ActivityFinder1.db");
         this.deleteDatabase("ActivityFinderA.db");
+        this.deleteDatabase("ActivityFinderB.db");
 
 
         editNamed = (EditText)findViewById(R.id.editTextTextEmailAddress2) ;

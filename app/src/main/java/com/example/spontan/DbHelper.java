@@ -1,3 +1,5 @@
+
+
 package com.example.spontan;
 
 import android.content.ContentValues;
@@ -11,8 +13,8 @@ import androidx.annotation.Nullable;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-       public DbHelper(Context context) {
-        super(context, "ActivityFinderB.db",null,1);
+    public DbHelper(Context context) {
+        super(context, "ActivityFinderC.db",null,1);
     }
 
 
@@ -21,7 +23,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase DB) {
         DB.execSQL("Create table UserAuth(name Text, username TEXT primary key, password TEXT, contact INTEGER )");
         DB.execSQL("Create table UserInterest(email TEXT , interest TEXT)");
-        DB.execSQL("Create table GroupDetails(GroupName TEXT primary key, description TEXT, locationName TEXT,locationAddress TEXT, date TEXT, time TEXT)");
+        DB.execSQL("Create table GroupDetails(GroupName TEXT primary key, ActivityName TEXT, LocationName TEXT,LocationAddress TEXT, Date TEXT, Time TEXT, Flag INTEGER)");
 
 
     }
@@ -42,7 +44,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean insertDataUserAuth(String name, String username, String password, int contact){
 
-       // userEmail = username;
+        // userEmail = username;
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
@@ -69,16 +71,17 @@ public class DbHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean insertDataGroupCreation(String GroupName, String description, String locationName , String  locationAddress,String date, String time ){
+    public boolean insertDataGroupCreation(String GroupName, String description, String locationName , String  locationAddress,String date, String time, int flag ){
 
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("GroupName", GroupName );
-        contentValues.put("description", description);
-        contentValues.put("locationName", locationName);
-        contentValues.put("locationAddress", locationAddress);
-        contentValues.put("date", date);
-        contentValues.put("time", time);
+        contentValues.put("ActivityName", description);
+        contentValues.put("LocationName", locationName);
+        contentValues.put("LocationAddress", locationAddress);
+        contentValues.put("Date", date);
+        contentValues.put("Time", time);
+        contentValues.put("Flag", flag) ;
 
         long result = DB.insert("GroupDetails",null ,contentValues);
         if(result == -1)
