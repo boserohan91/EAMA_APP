@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class SignIn extends AppCompatActivity {
@@ -28,6 +29,9 @@ public class SignIn extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // db check
+                EditText username = (EditText)findViewById(R.id.editTextTextEmailAddress);
+                Constants.setUserName(username.getText().toString());
                 open_central();
             }
         });

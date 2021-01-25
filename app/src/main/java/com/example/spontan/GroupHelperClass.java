@@ -2,19 +2,23 @@ package com.example.spontan;
 
 public class GroupHelperClass {
 
-    int grpID;
+    String grpID;
     String groupName;
     String locationName;
     String activityName;
+    double lat;
+    double lon;
 
-    public GroupHelperClass(int grpID, String groupName, String locationName, String activityName) {
+    public GroupHelperClass(String grpID, String groupName, String locationName, String activityName, double lat, double lon) {
         this.grpID = grpID;
         this.groupName = groupName;
         this.locationName = locationName;
         this.activityName = activityName;
+        this.lat = lat;
+        this.lon = lon;
     }
 
-    public int getGrpID() {
+    public String getGrpID() {
         return grpID;
     }
 

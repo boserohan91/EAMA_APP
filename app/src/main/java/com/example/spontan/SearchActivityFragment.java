@@ -134,7 +134,11 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
                 String name = place_object.getString("name");
                 String address = place_object.getString("formatted_address");
                 String types = place_object.getJSONArray("types").toString();
-                locationsList.add(new LocationsHelperClass(name, address, types));
+                JSONObject geometry = place_object.getJSONObject("geometry");
+                JSONObject location = geometry.getJSONObject("location");
+                double lat = location.getDouble("lat");
+                double lon = location.getDouble("lng");
+                locationsList.add(new LocationsHelperClass(name, address, types, lat, lon));
                 System.out.println("Location Name: "+locationsList.get(i).getLocationName());
 
 

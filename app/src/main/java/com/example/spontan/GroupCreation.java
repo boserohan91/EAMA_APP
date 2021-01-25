@@ -32,13 +32,14 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
     Button createGrp;
     EditText  locName, locAddr, grpDesc, actName,  timeText;
     TextView dateText;
+    Map<String,Object> GroupDetails;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myDb = Constants.getMyDBHelper(this);
         View view = getLayoutInflater().inflate(R.layout.activity_group_creation,null);
-
+        GroupDetails = new HashMap<>();
         Bundle extras = getIntent().getExtras();
         System.out.println("Checking bundle extras inside onCreate");
         if(extras != null){
@@ -49,6 +50,11 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
             System.out.println("Location Address in extras:"+ extras.getString("locationAddress"));
             locName.setText(extras.getString("locationName"));
             locAddr.setText(extras.getString("locationAddress"));
+            GroupDetails.put("LocName", extras.getString("locationName"));
+            GroupDetails.put("LocAddr", extras.getString("locationAddress"));
+            GroupDetails.put("Lat", extras.getDouble("lat"));
+            GroupDetails.put("Lon", extras.getDouble("lon"));
+
         }
         setContentView(view);
 
@@ -141,15 +147,13 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
 
     }
     public void AddFire(){
-        Map<String, String> GroupDetails = new HashMap<>();
+
         GroupDetails.put("GroupName", actName.getText().toString());
         GroupDetails.put("ActivityName", grpDesc.getText().toString());
-        GroupDetails.put("LocName", locName.getText().toString());
-        GroupDetails.put("LocAddr", locAddr.getText().toString());
         GroupDetails.put("Date", dateText.getText().toString());
         GroupDetails.put("Time", timeText.getText().toString());
         //GroupDetails.put("");
-
+        db.collection("users").document("new-city-id").set(GroupDetails);
         db.collection("GroupDetails")
                 .add(GroupDetails)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

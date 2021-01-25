@@ -24,6 +24,17 @@ public class Constants {
     public static boolean connected = true;
     public static boolean connectionFast = true;
     public static boolean batteryLevelLow = false;
+    public static String userName;
+
+    public static String getUserName() {
+        return userName;
+    }
+
+    public static void setUserName(String userName) {
+        Constants.userName = userName;
+    }
+
+
 
     public static boolean isBatteryLevelLow() {
         return batteryLevelLow;

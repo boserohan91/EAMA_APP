@@ -72,6 +72,8 @@ public class LocationsRecViewAdapter extends RecyclerView.Adapter<LocationsRecVi
                         System.out.println("Selected loc Address: " +location.locationAddress);
                         intent.putExtra("locationName", location.locationName);
                         intent.putExtra("locationAddress", location.locationAddress);
+                        intent.putExtra("lat", location.lat);
+                        intent.putExtra("lon", location.lon);
                         context.startActivity(intent);
                     }
                 }
