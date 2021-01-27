@@ -2,12 +2,14 @@ package com.example.spontan;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 
 public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapter.GroupListHolder> {
 
+    DbHelper myDb;
     ArrayList<GroupHelperClass> groupList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     public GroupRecViewAdapter(ArrayList<GroupHelperClass> groupList){
@@ -74,6 +77,7 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                         GroupHelperClass group = groupList.get(position);
                         HashMap<String, String> participant = new HashMap<>();
                         participant.put("GroupID",group.grpID);
+                        System.out.println("User joined group:"+Constants.getUserName());
                         participant.put("UserName", Constants.getUserName());
                         db.collection("Participants")
                                 .add(participant)
@@ -81,6 +85,7 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
                                         Log.d("TAG", "Snapshot added with ID:"  );
+                                        AddGroupToSQLite(group, itemView.getContext());
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -90,10 +95,28 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                         });
                         Context context = itemView.getContext();
                         Intent intent = new Intent(context, Group.class);
+                        intent.putExtra("groupID", group.grpID);
                         context.startActivity(intent);
                     }
                 }
             });
         }
+    }
+
+    public void AddGroupToSQLite(GroupHelperClass group, Context context){
+
+        myDb =  Constants.getMyDBHelper(context);
+        try{
+            boolean isInserted = myDb.insertDataGroupCreation(group.grpID,group.groupName, group.activityName , group.locationName, group.locAddr, group.date,group.time, 0  );
+            if(isInserted == true)
+                Toast.makeText(context,"Data Inserted",Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(context,"Data not Inserted",Toast.LENGTH_LONG).show();
+        }
+        catch(SQLiteConstraintException e){
+            e.printStackTrace();
+            System.out.println("Group already exists in SQLite DB");
+        }
+
     }
 }
