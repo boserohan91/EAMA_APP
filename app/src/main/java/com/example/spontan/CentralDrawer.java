@@ -56,7 +56,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                 name = (TextView) drawerView.findViewById(R.id.textViewNavName);
                 email = (TextView) drawerView.findViewById(R.id.textViewNavEmail);
 
-                Cursor res = myDb.getAllData();
+                Cursor res = myDb.getAllData("GroupDetails");
                 if(res.getCount() == -1) {
                     // show message
                     // showMessage("Error","Nothing found");

@@ -86,7 +86,7 @@ public class RecommendedGroupFragment extends Fragment {
                         double lat = Double.parseDouble(document.getData().get("Lat").toString());
 
                         if (lat<=maxLatitude && lat>=minLatitude){
-                            GroupHelperClass group =new GroupHelperClass(document.getId(), groupName, locName, activityName, lat, lon);
+                            GroupHelperClass group =new GroupHelperClass(document.getId(), groupName, locName, locAddr, activityName, date, time, lat, lon);
                             groupsList.add(group);
                             System.out.println("Group: "+group.groupName);
                         }

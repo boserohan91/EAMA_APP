@@ -16,8 +16,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -84,13 +86,13 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
                 //sqllite db
                 if (Constants.isConnected()){
                     AddFire(); // firebase db
-                    AddDataGroupDetails(0);
+
                 }
                 else{
-                    AddDataGroupDetails(1);
+                    AddDataGroupDetails(null,1);
                 }
 
-                open_group();
+
             }
         });
     }
@@ -101,7 +103,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
 //        LocationsHelperClass loc = data.
 //    }
 
-    public void open_group(){
+    public void open_group(String groupID){
 
 
         Intent intent = new Intent(this, Group.class);
@@ -115,6 +117,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         intent.putExtra("activityName", actName.getText().toString());
         intent.putExtra("date", dateText.getText().toString());
         intent.putExtra("time", timeText.getText().toString());
+        intent.putExtra("groupID", groupID);
 
         startActivity(intent);
     }
@@ -131,7 +134,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
 
     }
 
-    public  void AddDataGroupDetails(int flag) {
+    public  void AddDataGroupDetails(String groupID, int flag) {
 
         String Groupname= actName.getText().toString();
         String desc = grpDesc.getText().toString();
@@ -139,11 +142,14 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         String locAdd = locAddr.getText().toString();
         String date = dateText.getText().toString();
         String time = timeText.getText().toString();
-        boolean isInserted = myDb.insertDataGroupCreation(Groupname, desc , loc, locAdd, date,time, flag  );
+        boolean isInserted = myDb.insertDataGroupCreation(Constants.getUserName(), groupID,
+                Groupname, desc , loc, locAdd, date,time,
+                Double.parseDouble(GroupDetails.get("Lat").toString()),
+                Double.parseDouble(GroupDetails.get("Lon").toString()), flag  );
         if(isInserted == true)
-            Toast.makeText(GroupCreation.this,"Data Inserted",Toast.LENGTH_LONG).show();
+            Toast.makeText(GroupCreation.this,"Data Inserted",Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(GroupCreation.this,"Data not Inserted",Toast.LENGTH_LONG).show();
+            Toast.makeText(GroupCreation.this,"Data not Inserted",Toast.LENGTH_SHORT).show();
 
     }
     public void AddFire(){
@@ -159,11 +165,25 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("TAG", "Snapshot added with ID:"  );
+                        Log.d("TAG", "Snapshot added with ID:" +documentReference.getId()  );
+                        System.out.println("Group Ref ID: "+documentReference.getId());
+                        AddDataGroupDetails(documentReference.getId(),0);
+                        HashMap<String,String> participant = new HashMap<>();
+                        participant.put("GroupID",documentReference.getId());
+                        participant.put("UserName", Constants.getUserName());
+                        db.collection("Participants")
+                                .add(participant)
+                                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                                        open_group(documentReference.getId());
+                                    }
+                                });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                AddDataGroupDetails(null,1);
                 Log.w("TAG", "Error");
             }
         });

@@ -38,7 +38,7 @@ public class ProfileFragment extends Fragment {
 
 
         // from local DB
-        Cursor res = myDb.getAllData();
+        Cursor res = myDb.getAllData("UserAuth");
         if(res.getCount() == 0) {
             // show message
             // showMessage("Error","Nothing found");
@@ -54,7 +54,7 @@ public class ProfileFragment extends Fragment {
             TextView contact = (TextView) view.findViewById(R.id.textViewContactNumber);
 
             name.setText(res.getString(0));
-            email.setText(res.getString(1));
+            email.setText(Constants.getUserName());
             contact.setText(res.getString(3));
 
             buffer.append("username :"+ res.getString(0)+"\n");

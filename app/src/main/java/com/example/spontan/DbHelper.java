@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context) {
-        super(context, "ActivityFinderC.db",null,1);
+        super(context, "ActivityFinderE.db",null,1);
     }
 
 
@@ -23,7 +23,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase DB) {
         DB.execSQL("Create table UserAuth(name Text, username TEXT primary key, password TEXT, contact INTEGER )");
         DB.execSQL("Create table UserInterest(email TEXT , interest TEXT)");
-        DB.execSQL("Create table GroupDetails(GroupName TEXT primary key, ActivityName TEXT, LocationName TEXT,LocationAddress TEXT, Date TEXT, Time TEXT, Flag INTEGER)");
+        DB.execSQL("Create table GroupDetails(UserId TEXT, GroupId TEXT, GroupName TEXT , ActivityName TEXT, LocationName TEXT,LocationAddress TEXT, Date TEXT, Time TEXT, Latitude REAL, Longitude REAL, Flag INTEGER)");
 
 
     }
@@ -71,17 +71,24 @@ public class DbHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean insertDataGroupCreation(String GroupName, String description, String locationName , String  locationAddress,String date, String time, int flag ){
+    public boolean insertDataGroupCreation(String UserId, String GroupId, String GroupName,
+                                           String description, String locationName ,
+                                           String locationAddress,String date,
+                                           String time, double lat, double lon, int flag ){
 
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put("UserId", UserId);
+        contentValues.put("GroupId", GroupId);
         contentValues.put("GroupName", GroupName );
         contentValues.put("ActivityName", description);
         contentValues.put("LocationName", locationName);
         contentValues.put("LocationAddress", locationAddress);
         contentValues.put("Date", date);
         contentValues.put("Time", time);
-        contentValues.put("Flag", flag) ;
+        contentValues.put("Latitude", lat);
+        contentValues.put("Longitude", lon);
+        contentValues.put("Flag", flag);
 
         long result = DB.insert("GroupDetails",null ,contentValues);
         if(result == -1)
@@ -99,13 +106,30 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getAllData() {
+    public Cursor getAllData(String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from UserAuth",null);
+        Cursor res = db.rawQuery("select * from "+tableName,null);
         return res;
     }
 
+    public Cursor getFilteredData(String tableName, String columnName, String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+tableName+" where "+columnName+"="+value,null);
+        return res;
+    }
 
+    public boolean updateGroupData(String UserId, String GroupName, String GroupId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("GroupId", GroupId);
+        contentValues.put("flag", 0);
+        int result = db.update("GroupDetails", contentValues, "UserId=? and GroupName=?",new String[]{UserId, GroupName});
+        if(result == -1)
+            return false;
+        else
+            return true;
+
+    }
 
 
 }

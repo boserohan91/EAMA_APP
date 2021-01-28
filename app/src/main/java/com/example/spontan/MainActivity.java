@@ -1,17 +1,29 @@
 package com.example.spontan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkRequest;
 
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     DbHelper myDb;
@@ -19,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     Button continueBtn;
     TextView signInClick;
     String email;
+    HashMap<String, String> UserDetails;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         this.deleteDatabase("ActivityFinder1.db");
         this.deleteDatabase("ActivityFinderA.db");
         this.deleteDatabase("ActivityFinderB.db");
+        this.deleteDatabase("ActivityFinderC.db");
+        this.deleteDatabase("ActivityFinderD.db");
 
 
         editNamed = (EditText)findViewById(R.id.editTextTextEmailAddress2) ;
@@ -47,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(editPass.getText().toString());
                 System.out.println(editContact.getText().toString());
                 AddDataUserAuth();
+                AddFire();
+
                 open_interest_list();
             }
         });
@@ -69,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         Constants.buildActivityHashMap();
+
+        WorkRequest uploadWorkRequest =
+                new PeriodicWorkRequest.Builder(UploadtoFireWorker.class,5, TimeUnit.MINUTES)
+                        .build();
 
 
     }
@@ -99,6 +121,29 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this,"Data not Inserted",Toast.LENGTH_LONG).show();
                     }
 
+    public void AddFire(){
 
+        Constants.setUserName(editName.getText().toString());
+        UserDetails = new HashMap<>();
+        UserDetails.put("Name", editNamed.getText().toString());
+        UserDetails.put("UserName", editName.getText().toString());
+
+
+        db.collection("User")
+                .add(UserDetails)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("TAG", "Snapshot added with ID:"  );
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("TAG", "Error");
+            }
+        });
+        // TODO
+        // user auth updates to Firebase
+    }
 
 }
