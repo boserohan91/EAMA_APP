@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "578816550631",
+    "project_id": "activityfinder-9c6da",
+    "storage_bucket": "activityfinder-9c6da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578816550631:android:0dd5e9b1f3d46450b6a442",
+        "android_client_info": {
+          "package_name": "com.example.spontan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "578816550631-9v6gvthd0mpisaov3am45jts7s53vv5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjWAr_iK4A_JlSKTlW6CXcMWFd0VH3UaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "578816550631-9v6gvthd0mpisaov3am45jts7s53vv5u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
