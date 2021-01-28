@@ -2,6 +2,7 @@ package com.example.spontan;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +65,31 @@ public class UpcomingRecViewAdapter extends RecyclerView.Adapter<UpcomingRecView
                     int position = getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION){
                         // open group page
+                        GroupHelperClass group = upcomingActivities.get(position);
+                        open_group(group);
+
                     }
                 }
             });
         }
+    }
+
+    public void open_group(GroupHelperClass group){
+
+
+        Intent intent = new Intent(context, Group.class);
+
+
+        // save group on database, generate group ID and put it in intent extras
+
+        intent.putExtra("locationName", group.locationName);
+        intent.putExtra("locationAddress", group.locAddr);
+        intent.putExtra("grpDescription", group.activityName);
+        intent.putExtra("activityName",group.groupName);
+        intent.putExtra("date", group.date);
+        intent.putExtra("time", group.time);
+        intent.putExtra("groupID", group.grpID);
+
+        context.startActivity(intent);
     }
 }

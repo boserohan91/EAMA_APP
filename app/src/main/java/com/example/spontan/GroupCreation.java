@@ -142,11 +142,14 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         String locAdd = locAddr.getText().toString();
         String date = dateText.getText().toString();
         String time = timeText.getText().toString();
-        boolean isInserted = myDb.insertDataGroupCreation(groupID, Groupname, desc , loc, locAdd, date,time, flag  );
+        boolean isInserted = myDb.insertDataGroupCreation(Constants.getUserName(), groupID,
+                Groupname, desc , loc, locAdd, date,time,
+                Double.parseDouble(GroupDetails.get("Lat").toString()),
+                Double.parseDouble(GroupDetails.get("Lon").toString()), flag  );
         if(isInserted == true)
-            Toast.makeText(GroupCreation.this,"Data Inserted",Toast.LENGTH_LONG).show();
+            Toast.makeText(GroupCreation.this,"Data Inserted",Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(GroupCreation.this,"Data not Inserted",Toast.LENGTH_LONG).show();
+            Toast.makeText(GroupCreation.this,"Data not Inserted",Toast.LENGTH_SHORT).show();
 
     }
     public void AddFire(){
@@ -180,6 +183,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                AddDataGroupDetails(null,1);
                 Log.w("TAG", "Error");
             }
         });

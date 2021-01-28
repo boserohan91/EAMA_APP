@@ -2,6 +2,8 @@ package com.example.spontan;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkRequest;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -21,6 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     DbHelper myDb;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         this.deleteDatabase("ActivityFinderA.db");
         this.deleteDatabase("ActivityFinderB.db");
         this.deleteDatabase("ActivityFinderC.db");
+        this.deleteDatabase("ActivityFinderD.db");
 
 
         editNamed = (EditText)findViewById(R.id.editTextTextEmailAddress2) ;
@@ -83,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         Constants.buildActivityHashMap();
+
+        WorkRequest uploadWorkRequest =
+                new PeriodicWorkRequest.Builder(UploadtoFireWorker.class,5, TimeUnit.MINUTES)
+                        .build();
 
 
     }

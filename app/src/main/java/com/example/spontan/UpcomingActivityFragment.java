@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ public class UpcomingActivityFragment extends Fragment {
     public static ArrayList<GroupHelperClass> upcomingList = new ArrayList<>();
     RecyclerView upcomingRecycler;
     UpcomingRecViewAdapter upcomingAdapter;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseFirestore db;
     DbHelper myDb;
 
     @Nullable
@@ -39,6 +41,7 @@ public class UpcomingActivityFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
         upcomingRecycler = view.findViewById(R.id.upcomingRecyclerView);
         upcomingRecycler.setHasFixedSize(true);
         upcomingRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL , false ));
@@ -52,7 +55,7 @@ public class UpcomingActivityFragment extends Fragment {
             ArrayList<String> groupNames = new ArrayList<>();
             db.collection("Participants")
                     .whereEqualTo("UserName", Constants.getUserName())
-                    .get()
+                    .get(Source.SERVER)
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -67,35 +70,27 @@ public class UpcomingActivityFragment extends Fragment {
                                     generateGroupList(groupNames);
                             } else {
                                 System.out.println("Error getting documents: "+ task.getException());
+                                System.out.println("Getting data from local DB");
+                                getDataFromDB();
                             }
                         }
-                    });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                    System.out.println("Getting data from local DB");
+                    getDataFromDB();
+                }
+            });
         }
         else{
-            myDb = Constants.getMyDBHelper(getContext());
-            Cursor res = myDb.getAllData("GroupDetails");
-            if(res.getCount() == 0) {
-                // show message
-                // showMessage("Error","Nothing found");
-                System.out.println("No data");
-                return;
-            }
-            while (res.moveToNext()) {
-
-                upcomingList.add(new GroupHelperClass(res.getString(0),
-                        res.getString(1), res.getString(3),
-                        res.getString(4), res.getString(2),
-                        res.getString(5), res.getString(6),
-                        0.0, 0.0));
-
-            }
-            upcomingAdapter.notifyDataSetChanged();
+            getDataFromDB();
         }
     }
 
     public void generateGroupList(ArrayList groupNames){
         db.collection("GroupDetails").whereIn("__name__", groupNames)
-                .get()
+                .get(Source.SERVER)
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -115,8 +110,39 @@ public class UpcomingActivityFragment extends Fragment {
                             upcomingAdapter.notifyDataSetChanged();
                         } else {
                             System.out.println("Error getting documents: "+ task.getException());
+                            System.out.println("Getting data from DB");
+                            getDataFromDB();
                         }
-                    }});
+                    }}).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                System.out.println("Getting data from DB");
+                getDataFromDB();
 
+            }
+        });
+
+    }
+
+    public void getDataFromDB(){
+        myDb = Constants.getMyDBHelper(getContext());
+        Cursor res = myDb.getFilteredData("GroupDetails", "UserId", Constants.getUserName());
+        if(res.getCount() == 0) {
+            // show message
+            // showMessage("Error","Nothing found");
+            System.out.println("No data");
+            return;
+        }
+        while (res.moveToNext()) {
+
+            upcomingList.add(new GroupHelperClass(res.getString(0),
+                    res.getString(1), res.getString(3),
+                    res.getString(4), res.getString(2),
+                    res.getString(5), res.getString(6),
+                    0.0, 0.0));
+
+        }
+        upcomingAdapter.notifyDataSetChanged();
     }
 }

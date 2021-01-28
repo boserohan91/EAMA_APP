@@ -90,6 +90,7 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(itemView.getContext(),"Could not join group! No internet connection available!", Toast.LENGTH_SHORT);
                                 Log.w("TAG", "Error");
                             }
                         });
@@ -107,7 +108,9 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
 
         myDb =  Constants.getMyDBHelper(context);
         try{
-            boolean isInserted = myDb.insertDataGroupCreation(group.grpID,group.groupName, group.activityName , group.locationName, group.locAddr, group.date,group.time, 0  );
+            boolean isInserted = myDb.insertDataGroupCreation(Constants.getUserName(),
+                    group.grpID,group.groupName, group.activityName ,
+                    group.locationName, group.locAddr, group.date,group.time, group.lat, group.lon, 0  );
             if(isInserted == true)
                 Toast.makeText(context,"Data Inserted",Toast.LENGTH_LONG).show();
             else

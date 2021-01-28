@@ -9,8 +9,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +34,7 @@ public class Group extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = getLayoutInflater().inflate(R.layout.activity_group,null);
+        View view = getLayoutInflater().inflate(R.layout.activity_group, null);
 
         TextView grpDesc = view.findViewById(R.id.descriptionText);
         TextView grpLoc = view.findViewById(R.id.locationText);
@@ -41,63 +43,66 @@ public class Group extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         System.out.println("Checking bundle extras inside onCreate");
-        if(extras != null){
 
+        setContentView(view);
 
+        if (extras != null) {
 
-
-//           System.out.println("Location Name in extras:"+ extras.getString("locationName"));
-//           System.out.println("Location Address in extras:"+ extras.getString("locationAddress"));
             String desc = extras.getString("grpDescription");
             String location = extras.getString("locationName") + ", " + extras.getString("locationAddress");
-            String dtTime = extras.getString("date") +  ", " + extras.getString("time");
+            String dtTime = extras.getString("date") + ", " + extras.getString("time");
             String grpNm = "Group: " + extras.getString("activityName");
             grpDesc.setText(desc);
             grpLoc.setText(location);
             grpDtTime.setText(dtTime);
             grpName.setText(grpNm);
 
-
-
-
-        }
-        setContentView(view);
-
-        if(extras.getString("groupID")!=null){
-            participantRecycler = findViewById(R.id.participantRecycler);
-            groupID = extras.getString("groupID");
-            participantRecycler(groupID);
-        }
-
-        db.collection("GroupDetails").whereEqualTo("__name__",groupID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        System.out.println(document.getId() + " => " + document.getData());
-                        String activityName = document.getData().get("ActivityName").toString();
-                        String groupName = document.getData().get("GroupName").toString();
-                        String locName = document.getData().get("LocName").toString();
-                        String locAddr = document.getData().get("LocAddr").toString();
-                        String date = document.getData().get("Date").toString();
-                        String time = document.getData().get("Time").toString();
-                        grpDesc.setText(activityName);
-                        grpLoc.setText(locName+", "+locAddr);
-                        grpDtTime.setText(date+", "+time);
-                        grpName.setText(groupName);
-
-                    }
-
-
-
-                } else {
-                    System.out.println("Error getting documents: "+ task.getException());
-                }
-
+            if (extras.getString("groupID") != null) {
+                participantRecycler = findViewById(R.id.participantRecycler);
+                groupID = extras.getString("groupID");
+                participantRecycler(groupID);
             }
-        });
 
+        }
+        else {
+
+
+            db.collection("GroupDetails")
+                    .whereEqualTo("__name__", groupID)
+                    .get(Source.SERVER)
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    System.out.println(document.getId() + " => " + document.getData());
+                                    String activityName = document.getData().get("ActivityName").toString();
+                                    String groupName = document.getData().get("GroupName").toString();
+                                    String locName = document.getData().get("LocName").toString();
+                                    String locAddr = document.getData().get("LocAddr").toString();
+                                    String date = document.getData().get("Date").toString();
+                                    String time = document.getData().get("Time").toString();
+                                    grpDesc.setText(activityName);
+                                    grpLoc.setText(locName + ", " + locAddr);
+                                    grpDtTime.setText(date + ", " + time);
+                                    grpName.setText(groupName);
+
+                                }
+
+
+                            } else {
+                                System.out.println("Error getting documents: " + task.getException());
+                            }
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        }
     }
 
     private void participantRecycler(String groupID) {
@@ -117,7 +122,7 @@ public class Group extends AppCompatActivity {
                 //retrieve data normally from Firebase Server
                 CollectionReference participantRef = db.collection("Participants");
                 Query query = participantRef.whereEqualTo("GroupID", groupID);
-                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                query.get(Source.SERVER).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -131,6 +136,12 @@ public class Group extends AppCompatActivity {
                         } else {
                             System.out.println("Error getting documents: "+ task.getException());
                         }
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Unable to load participants. NO internet connection!", Toast.LENGTH_SHORT);
                     }
                 });
 
@@ -160,7 +171,7 @@ public class Group extends AppCompatActivity {
     private void generateParticipantList(ArrayList userNames){
 
         db.collection("User").whereIn("UserName", userNames)
-        .get()
+        .get(Source.SERVER)
         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -176,7 +187,13 @@ public class Group extends AppCompatActivity {
                 } else {
                     System.out.println("Error getting documents: "+ task.getException());
                 }
-            }});
+            }})
+                .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Unable to load participants. NO internet connection!", Toast.LENGTH_SHORT);
+            }
+        });
 
 
     }
