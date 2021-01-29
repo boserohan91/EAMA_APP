@@ -27,6 +27,7 @@ public class UploadtoFireWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        System.out.println("Upload worker called");
         uploadToFire();
 
         return Result.success();
@@ -46,6 +47,7 @@ public class UploadtoFireWorker extends Worker {
             while (res.moveToNext()) {
                 db = FirebaseFirestore.getInstance();
                 HashMap<String,Object> GroupDetails= new HashMap<>();
+                String UserId = res.getString(0);
                 GroupDetails.put("GroupName", res.getString(2));
                 GroupDetails.put("ActivityName", res.getString(3));
                 GroupDetails.put("LocName", res.getString(4));
@@ -61,7 +63,8 @@ public class UploadtoFireWorker extends Worker {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         String grpID = documentReference.getId();
-                        mySQLDb.updateGroupData(Constants.getUserName(), res.getString(1), grpID);
+                        mySQLDb.updateGroupData(UserId, GroupDetails.get( "GroupName").toString(), grpID);
+                        System.out.println("Group successfully uploaded to Firebase: "+GroupDetails.get( "GroupName").toString());
                     }
                 });
 

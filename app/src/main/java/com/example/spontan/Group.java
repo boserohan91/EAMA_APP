@@ -43,7 +43,9 @@ public class Group extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         System.out.println("Checking bundle extras inside onCreate");
-
+        String activity = " ";
+        activity = extras.getString("activity");
+        System.out.println("Previous Activity: "+activity);
         setContentView(view);
 
         if (extras != null) {
@@ -52,6 +54,7 @@ public class Group extends AppCompatActivity {
             String location = extras.getString("locationName") + ", " + extras.getString("locationAddress");
             String dtTime = extras.getString("date") + ", " + extras.getString("time");
             String grpNm = "Group: " + extras.getString("activityName");
+
             grpDesc.setText(desc);
             grpLoc.setText(location);
             grpDtTime.setText(dtTime);
@@ -64,44 +67,46 @@ public class Group extends AppCompatActivity {
             }
 
         }
-        else {
+        if(activity!=null){
+            if (activity.equals("RecommendedGroups")) {
 
 
-            db.collection("GroupDetails")
-                    .whereEqualTo("__name__", groupID)
-                    .get(Source.SERVER)
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                db.collection("GroupDetails")
+                        .whereEqualTo("__name__", groupID)
+                        .get(Source.SERVER)
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    System.out.println(document.getId() + " => " + document.getData());
-                                    String activityName = document.getData().get("ActivityName").toString();
-                                    String groupName = document.getData().get("GroupName").toString();
-                                    String locName = document.getData().get("LocName").toString();
-                                    String locAddr = document.getData().get("LocAddr").toString();
-                                    String date = document.getData().get("Date").toString();
-                                    String time = document.getData().get("Time").toString();
-                                    grpDesc.setText(activityName);
-                                    grpLoc.setText(locName + ", " + locAddr);
-                                    grpDtTime.setText(date + ", " + time);
-                                    grpName.setText(groupName);
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        System.out.println(document.getId() + " => " + document.getData());
+                                        String activityName = document.getData().get("ActivityName").toString();
+                                        String groupName = document.getData().get("GroupName").toString();
+                                        String locName = document.getData().get("LocName").toString();
+                                        String locAddr = document.getData().get("LocAddr").toString();
+                                        String date = document.getData().get("Date").toString();
+                                        String time = document.getData().get("Time").toString();
+                                        grpDesc.setText(activityName);
+                                        grpLoc.setText(locName + ", " + locAddr);
+                                        grpDtTime.setText(date + ", " + time);
+                                        grpName.setText(groupName);
 
+                                    }
+
+
+                                } else {
+                                    System.out.println("Error getting documents: " + task.getException());
                                 }
 
-
-                            } else {
-                                System.out.println("Error getting documents: " + task.getException());
                             }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                }
-            });
+                    }
+                });
+            }
         }
     }
 

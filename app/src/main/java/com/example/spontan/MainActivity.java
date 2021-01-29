@@ -2,7 +2,11 @@ package com.example.spontan;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import android.content.Intent;
@@ -19,10 +23,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -88,9 +95,25 @@ public class MainActivity extends AppCompatActivity {
 
         Constants.buildActivityHashMap();
 
-        WorkRequest uploadWorkRequest =
-                new PeriodicWorkRequest.Builder(UploadtoFireWorker.class,5, TimeUnit.MINUTES)
+        PeriodicWorkRequest uploadWorkRequest =
+                new PeriodicWorkRequest.Builder(UploadtoFireWorker.class,2, TimeUnit.MINUTES)
                         .build();
+
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("periodicUpload", ExistingPeriodicWorkPolicy.KEEP, uploadWorkRequest);
+        WorkManager wm = WorkManager.getInstance();
+
+        ListenableFuture<List<WorkInfo>> status = wm.getWorkInfosByTag("periodicUpload");
+        try {
+            List<WorkInfo> workInfoList = status.get();
+            for (WorkInfo info: workInfoList){
+                System.out.println(info.getState());
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(status);
 
 
     }

@@ -97,6 +97,7 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                         Context context = itemView.getContext();
                         Intent intent = new Intent(context, Group.class);
                         intent.putExtra("groupID", group.grpID);
+                        intent.putExtra("activity", "RecommendedGroups");
                         context.startActivity(intent);
                     }
                 }

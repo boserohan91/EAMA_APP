@@ -123,7 +123,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("GroupId", GroupId);
         contentValues.put("flag", 0);
-        int result = db.update("GroupDetails", contentValues, "UserId=? and GroupName=?",new String[]{UserId, GroupName});
+        int result = db.update("GroupDetails", contentValues, "UserId = ? and GroupName = ? ", new String[]{UserId, GroupName});
         if(result == -1)
             return false;
         else
