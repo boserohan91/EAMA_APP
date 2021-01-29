@@ -1,22 +1,18 @@
 package com.example.spontan;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,9 +29,10 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
     public static ArrayList<LocationsHelperClass> locationsList = new ArrayList<>();
     RecyclerView locationsRecycler;
     LocationsRecViewAdapter locationsAdapter;
-    EditText searchActivityEditText;
+    Spinner activitySpinner;
     String activityText;
     public Button searchActivityBtn;
+    String[] activities;
 
     @Nullable
     @Override
@@ -55,34 +52,65 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
         locationsRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL , false ));
         locationsAdapter = new LocationsRecViewAdapter(locationsList);
         locationsRecycler.setAdapter(locationsAdapter);
+//
+//        searchActivityEditText = (EditText) view.findViewById(R.id.spinnerSearchActivity);
+//        searchActivityEditText.setText(activityText);
 
-        searchActivityEditText = (EditText) view.findViewById(R.id.editTextSearchActivity);
-        searchActivityEditText.setText(activityText);
+        activities=getResources().getStringArray(R.array.activities);
 
+        ArrayList<String> activityList =new ArrayList<>();
+        activityList.add("None");
+        for (String activity: activities){
+            activityList.add(activity);
+        }
+        activitySpinner = (Spinner) view.findViewById(R.id.spinnerSearchActivity);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, activityList);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        activitySpinner.setAdapter(arrayAdapter);
+        if(activityText!=null)
+            activitySpinner.setSelection(arrayAdapter.getPosition(activityText));
+
+        activitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println(activitySpinner.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+        activitySpinner = (Spinner) view.findViewById(R.id.spinnerSearchActivity);
         // use places Google API to find places nearby user where searched activity can be performed and return list view
         searchActivityBtn = (Button) view.findViewById(R.id.searchBtn);
 
         searchActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!(activitySpinner.getSelectedItem().toString().equals("None"))){
+                    locationsList.clear();
+                    locationsAdapter.locationsList.clear();
 
-                locationsList.clear();
-                locationsAdapter.locationsList.clear();
+                    // use network location provider or gps, based on battery level & connectivity
+                    getPlaces();
+                }
+                else{
+                    Toast.makeText(getContext(), "Please select an activity!", Toast.LENGTH_SHORT);
+                    System.out.println("Please select an activity!");
+                }
 
-                // use network location provider or gps, based on battery level & connectivity
-                getPlaces();
 
             }
         });
 
-        if(searchActivityEditText != null){
+        if(!(activitySpinner.getSelectedItem().toString().equals("None"))){
             searchActivityBtn.performClick();
         }
         // also return all the open groups for the activity
@@ -90,8 +118,8 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
 
     public void getPlaces(){
 
-        searchActivityEditText = (EditText) getView().findViewById(R.id.editTextSearchActivity);
-        String searchedActivity = Constants.activities.get(searchActivityEditText.getText().toString());
+
+        String searchedActivity = Constants.activities.get(activitySpinner.getSelectedItem().toString());
         double latitude = 0.0;
         double longitude = 0.0;
         MyLocationListener myLocationListener = new MyLocationListener(getContext(), getActivity());
