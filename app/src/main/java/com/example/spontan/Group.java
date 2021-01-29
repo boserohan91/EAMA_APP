@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class Group extends AppCompatActivity {
     ArrayList<ParticipantHelperClass> participantList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String groupID;
+    DbHelper mySQLDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +61,36 @@ public class Group extends AppCompatActivity {
             grpLoc.setText(location);
             grpDtTime.setText(dtTime);
             grpName.setText(grpNm);
-
+            participantRecycler = findViewById(R.id.participantRecycler);
             if (extras.getString("groupID") != null) {
-                participantRecycler = findViewById(R.id.participantRecycler);
+
                 groupID = extras.getString("groupID");
                 participantRecycler(groupID);
+            }
+            else{
+
+                participantList = new ArrayList<>();
+                mySQLDb = Constants.getMyDBHelper(getApplicationContext());
+                participantRecycler.setHasFixedSize(true);
+                participantRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL , false ));
+
+                Cursor res = mySQLDb.getFilteredUserData("UserAuth", "username", Constants.getUserName());
+                if(res.getCount() == 0) {
+                    // show message
+                    // showMessage("Error","Nothing found");
+                    System.out.println("No User data");
+                    return;
+                }
+                while (res.moveToNext()) {
+
+                    participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, res.getString(0)));
+
+                }
+
+
+                adapter = new ParticipantRecViewAdapter(participantList);
+                participantRecycler.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
             }
 
         }

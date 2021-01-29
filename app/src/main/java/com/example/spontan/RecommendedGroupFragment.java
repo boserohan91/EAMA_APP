@@ -47,7 +47,7 @@ public class RecommendedGroupFragment extends Fragment {
         groupsRecycler = view.findViewById(R.id.recommendedGroupRecView);
         groupsRecycler.setHasFixedSize(true);
         groupsRecycler.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL , false ));
-        groupsAdapter = new GroupRecViewAdapter(groupsList);
+        groupsAdapter = new GroupRecViewAdapter(groupsList,getContext());
         groupsRecycler.setAdapter(groupsAdapter);
 
 //        groupsList.add(new GroupHelperClass(1, "Weekend Football", "Zellescher Campus", "Soccer" ));

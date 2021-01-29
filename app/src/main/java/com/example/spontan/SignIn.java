@@ -30,7 +30,7 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // db check
-                EditText username = (EditText)findViewById(R.id.editTextTextEmailAddress);
+                EditText username = (EditText)findViewById(R.id.editTextTextEmailAddressSignIn);
                 Constants.setUserName(username.getText().toString());
                 open_central();
             }

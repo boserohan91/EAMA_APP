@@ -136,10 +136,10 @@ public class UpcomingActivityFragment extends Fragment {
         }
         while (res.moveToNext()) {
 
-            upcomingList.add(new GroupHelperClass(res.getString(0),
-                    res.getString(1), res.getString(3),
-                    res.getString(4), res.getString(2),
-                    res.getString(5), res.getString(6),
+            upcomingList.add(new GroupHelperClass(res.getString(1),
+                    res.getString(2), res.getString(4),
+                    res.getString(5), res.getString(3),
+                    res.getString(6), res.getString(7),
                     0.0, 0.0));
 
         }

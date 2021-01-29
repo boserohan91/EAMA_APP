@@ -40,7 +40,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-         myDb = Constants.getMyDBHelper(this);
+        myDb = Constants.getMyDBHelper(this);
         drawer = (DrawerLayout) findViewById(R.id.central_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -56,7 +56,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                 name = (TextView) drawerView.findViewById(R.id.textViewNavName);
                 email = (TextView) drawerView.findViewById(R.id.textViewNavEmail);
 
-                Cursor res = myDb.getAllData("GroupDetails");
+                Cursor res = myDb.getAllData("UserAuth");
                 if(res.getCount() == -1) {
                     // show message
                     // showMessage("Error","Nothing found");
@@ -68,7 +68,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                 while (res.moveToNext()) {
 
                     name.setText(res.getString(0));
-                    email.setText(res.getString(1));
+                    email.setText(Constants.getUserName());
                 }
             }
 

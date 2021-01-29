@@ -16,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +30,10 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
     DbHelper myDb;
     ArrayList<GroupHelperClass> groupList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public GroupRecViewAdapter(ArrayList<GroupHelperClass> groupList){
+    Context recGroupContext;
+    public GroupRecViewAdapter(ArrayList<GroupHelperClass> groupList, Context context){
         this.groupList = groupList;
+        recGroupContext = context;
     }
 
 
@@ -73,32 +78,9 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION){
+                    if (position != RecyclerView.NO_POSITION) {
                         GroupHelperClass group = groupList.get(position);
-                        HashMap<String, String> participant = new HashMap<>();
-                        participant.put("GroupID",group.grpID);
-                        System.out.println("User joined group:"+Constants.getUserName());
-                        participant.put("UserName", Constants.getUserName());
-                        db.collection("Participants")
-                                .add(participant)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Log.d("TAG", "Snapshot added with ID:"  );
-                                        AddGroupToSQLite(group, itemView.getContext());
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(itemView.getContext(),"Could not join group! No internet connection available!", Toast.LENGTH_SHORT);
-                                Log.w("TAG", "Error");
-                            }
-                        });
-                        Context context = itemView.getContext();
-                        Intent intent = new Intent(context, Group.class);
-                        intent.putExtra("groupID", group.grpID);
-                        intent.putExtra("activity", "RecommendedGroups");
-                        context.startActivity(intent);
+                        checkUserisParticipantElseJoin(group, v.getContext());
                     }
                 }
             });
@@ -121,6 +103,53 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
             e.printStackTrace();
             System.out.println("Group already exists in SQLite DB");
         }
+
+    }
+
+    public void checkUserisParticipantElseJoin(GroupHelperClass group, Context context) {
+        db.collection("Participants")
+                .whereEqualTo("UserName", Constants.getUserName())
+                .whereEqualTo("GroupID",group.grpID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.isEmpty()){
+                            HashMap<String, String> participant = new HashMap<>();
+                            participant.put("GroupID",group.grpID);
+                            System.out.println("User joined group:"+Constants.getUserName());
+                            participant.put("UserName", Constants.getUserName());
+                            db.collection("Participants")
+                                    .add(participant)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Log.d("TAG", "Snapshot added with ID:"  );
+                                            AddGroupToSQLite(group, context);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(context,"Could not join group! No internet connection available!", Toast.LENGTH_SHORT);
+                                    Log.w("TAG", "Error");
+                                }
+                            });
+
+                            Intent intent = new Intent(context, Group.class);
+                            intent.putExtra("groupID", group.grpID);
+                            intent.putExtra("activity", "RecommendedGroups");
+                            context.startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(recGroupContext, "You are already a participant! Please check Upcoming Activities", Toast.LENGTH_SHORT);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(recGroupContext, "No Internet Connection. Please retry again later!", Toast.LENGTH_SHORT);
+                    }
+                });
 
     }
 }

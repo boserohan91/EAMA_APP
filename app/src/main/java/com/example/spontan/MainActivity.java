@@ -2,18 +2,15 @@ package com.example.spontan;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     DbHelper myDb;
-    EditText editNamed, editName ,editPass,editContact ;
+    EditText editNamed, editUserName ,editPass,editContact ;
     Button continueBtn;
     TextView signInClick;
     String email;
@@ -51,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
         this.deleteDatabase("ActivityFinderB.db");
         this.deleteDatabase("ActivityFinderC.db");
         this.deleteDatabase("ActivityFinderD.db");
+        this.deleteDatabase("ActivityFinderE.db");
 
 
-        editNamed = (EditText)findViewById(R.id.editTextTextEmailAddress2) ;
-        editName = (EditText)findViewById(R.id.editTextTextEmailAddress);
+        editNamed = (EditText)findViewById(R.id.editTextTextName) ;
+        editUserName = (EditText)findViewById(R.id.editTextTextEmailAddress);
         editPass = (EditText)findViewById(R.id.editTextTextPassword);
         editContact = (EditText)findViewById(R.id.editTextPhone);
 
@@ -66,13 +65,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                // myDb.deleteUserInterest("UserInterest");
                 System.out.println(editNamed.getText().toString());
-                System.out.println(editName.getText().toString());
+                System.out.println(editUserName.getText().toString());
                 System.out.println(editPass.getText().toString());
                 System.out.println(editContact.getText().toString());
-                AddDataUserAuth();
-                AddFire();
-
-                open_interest_list();
+                checkUserIDHasJoinedElseAdd();
             }
         });
 
@@ -120,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void open_interest_list(){
         Intent intent = new Intent(this, SelectInterest.class);
-        email =  editName.getText().toString();
+        email =  editUserName.getText().toString();
         intent.putExtra("email", email);
         startActivity(intent);
     }
@@ -134,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     public  void AddDataUserAuth() {
 
                         String name= editNamed.getText().toString();
-                        String usename = editName.getText().toString();
+                        String usename = editUserName.getText().toString();
                         String password =editPass.getText().toString();
                         int contact =Integer.parseInt(editContact.getText().toString()) ;
                         boolean isInserted = myDb.insertDataUserAuth(name, usename , password, contact );
@@ -146,10 +142,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void AddFire(){
 
-        Constants.setUserName(editName.getText().toString());
+
         UserDetails = new HashMap<>();
         UserDetails.put("Name", editNamed.getText().toString());
-        UserDetails.put("UserName", editName.getText().toString());
+        UserDetails.put("UserName", editUserName.getText().toString());
 
 
         db.collection("User")
@@ -158,15 +154,46 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("TAG", "Snapshot added with ID:"  );
+                        Constants.setUserName(editUserName.getText().toString());
+                        AddDataUserAuth();
+                        open_interest_list();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w("TAG", "Error");
+                Toast.makeText(getApplicationContext(), "FAILED, Please try again!", Toast.LENGTH_LONG);
             }
         });
         // TODO
         // user auth updates to Firebase
+    }
+
+    public void checkUserIDHasJoinedElseAdd(){
+        db.collection("User")
+                .whereEqualTo("UserName", editUserName.getText().toString())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.isEmpty()){
+                            AddFire();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),
+                                    "User already present with this Email ID! Use different email address!",
+                                    Toast.LENGTH_SHORT);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),
+                                "Network issue! Please check if you are online!",
+                                Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
 }

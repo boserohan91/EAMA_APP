@@ -20,7 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress2"
+        android:id="@+id/editTextTextName"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_marginTop="12dp"
@@ -62,7 +62,7 @@
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextName" />
 
     <TextView
         android:id="@+id/textView2"

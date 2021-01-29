@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context) {
-        super(context, "ActivityFinderE.db",null,1);
+        super(context, "ActivityFinderF.db",null,1);
     }
 
 
@@ -112,9 +112,15 @@ public class DbHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getFilteredUserData(String tableName, String columnName, String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+tableName+" where "+columnName+" like "+"'"+value+"'",null);
+        return res;
+    }
+
     public Cursor getFilteredData(String tableName, String columnName, String value) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from "+tableName+" where "+columnName+"="+value,null);
+        Cursor res = db.rawQuery("select * from "+tableName+" where "+columnName+"="+"'"+value+"'",null);
         return res;
     }
 

@@ -49,7 +49,6 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
 
 
         View view = inflater.inflate(R.layout.search_activity, container, false);
-        //locationsList.add(new LocationsHelperClass("Rohan Basketball","Zellescher Weg", "club"));
         System.out.println("Locations List 1: "+locationsList);
         locationsRecycler = view.findViewById(R.id.locationsRecyclerView);
         locationsRecycler.setHasFixedSize(true);
