@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         UserDetails = new HashMap<>();
         UserDetails.put("Name", editNamed.getText().toString());
         UserDetails.put("UserName", editUserName.getText().toString());
+        UserDetails.put("Password", editPass.getText().toString());
 
 
         db.collection("User")
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("TAG", "Snapshot added with ID:"  );
                         Constants.setUserName(editUserName.getText().toString());
+                        Constants.setName(editNamed.getText().toString());
                         AddDataUserAuth();
                         open_interest_list();
                     }

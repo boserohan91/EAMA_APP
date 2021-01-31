@@ -26,6 +26,16 @@ public class Constants {
     public static boolean batteryLevelLow = false;
     public static String userName;
 
+    public static String name;
+
+    public static String getName() {
+        return name;
+    }
+
+    public static void setName(String name) {
+        Constants.name = name;
+    }
+
     public static String getUserName() {
         return userName;
     }
@@ -33,7 +43,6 @@ public class Constants {
     public static void setUserName(String userName) {
         Constants.userName = userName;
     }
-
 
 
     public static boolean isBatteryLevelLow() {

@@ -68,22 +68,25 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                 name = (TextView) drawerView.findViewById(R.id.textViewNavName);
                 email = (TextView) drawerView.findViewById(R.id.textViewNavEmail);
 
-                Cursor res = myDb.getFilteredUserData("UserAuth", "username", Constants.getUserName());
-                if(res.getCount() == -1) {
-                    // show message
-                    // showMessage("Error","Nothing found");
-                    name.setText("");
-                    email.setText(Constants.getUserName());
-                    System.out.println("No data");
-                    return;
-                }
+//                Cursor res = myDb.getFilteredUserData("UserAuth", "username", Constants.getUserName());
+//                if(res.getCount() == -1) {
+//                    // show message
+//                    // showMessage("Error","Nothing found");
+//                    name.setText("");
+//                    email.setText(Constants.getUserName());
+//                    System.out.println("No data in local DB");
+//                    return;
+//                }
+//
+//                //StringBuffer buffer = new StringBuffer();
+//                while (res.moveToNext()) {
+//
+//                    name.setText(res.getString(0));
+//                    email.setText(Constants.getUserName());
+//                }
 
-                //StringBuffer buffer = new StringBuffer();
-                while (res.moveToNext()) {
-
-                    name.setText(res.getString(0));
-                    email.setText(Constants.getUserName());
-                }
+                email.setText(Constants.getUserName());
+                name.setText(Constants.getName());
             }
 
             @Override
