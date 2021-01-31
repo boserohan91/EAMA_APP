@@ -40,10 +40,12 @@ public class SignIn extends AppCompatActivity {
     public void open_sign_up(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+
     }
 
     public void open_central(){
         Intent intent = new Intent(this, CentralDrawer.class);
         startActivity(intent);
+        finish();
     }
 }

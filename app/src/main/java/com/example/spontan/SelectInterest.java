@@ -19,6 +19,14 @@ public class SelectInterest extends  AppCompatActivity {
     RecyclerView activityListRecyclerView;
     DbHelper myDb;
     TextView next;
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, CentralDrawer.class);
+        startActivity(intent);
+        super.onBackPressed();
+    }
+
     RecViewAdapter recViewAdapter;
 
     @Override

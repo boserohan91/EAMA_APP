@@ -34,6 +34,12 @@ public class Group extends AppCompatActivity {
     DbHelper mySQLDb;
 
     @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = getLayoutInflater().inflate(R.layout.activity_group, null);

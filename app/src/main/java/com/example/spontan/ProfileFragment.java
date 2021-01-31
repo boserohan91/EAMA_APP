@@ -38,11 +38,12 @@ public class ProfileFragment extends Fragment {
 
 
         // from local DB
-        Cursor res = myDb.getAllData("UserAuth");
+        Cursor res = myDb.getFilteredUserData("UserAuth", "username", Constants.getUserName());
         if(res.getCount() == 0) {
             // show message
             // showMessage("Error","Nothing found");
             System.out.println("No data");
+            // get from Firebase then
             return;
         }
 

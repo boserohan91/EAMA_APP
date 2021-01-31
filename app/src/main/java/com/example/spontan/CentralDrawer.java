@@ -9,10 +9,17 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.Menu;
@@ -24,6 +31,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.common.util.concurrent.ListenableFuture;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class CentralDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener, RecommendedActivityText {
 
@@ -56,10 +68,12 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                 name = (TextView) drawerView.findViewById(R.id.textViewNavName);
                 email = (TextView) drawerView.findViewById(R.id.textViewNavEmail);
 
-                Cursor res = myDb.getAllData("UserAuth");
+                Cursor res = myDb.getFilteredUserData("UserAuth", "username", Constants.getUserName());
                 if(res.getCount() == -1) {
                     // show message
                     // showMessage("Error","Nothing found");
+                    name.setText("");
+                    email.setText(Constants.getUserName());
                     System.out.println("No data");
                     return;
                 }
@@ -104,6 +118,34 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
 
             }
         });
+
+        BatteryLevelReceiver batteryLevelReceiver = new BatteryLevelReceiver();
+        registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+        ConnectivityStatusReceiver connectivityStatusReceiver = new ConnectivityStatusReceiver();
+        IntentFilter connectionIntentFilter = new IntentFilter();
+        connectionIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectivityStatusReceiver, connectionIntentFilter);
+
+        PeriodicWorkRequest uploadWorkRequest =
+                new PeriodicWorkRequest.Builder(UploadtoFireWorker.class,2, TimeUnit.MINUTES)
+                        .build();
+
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("periodicUpload", ExistingPeriodicWorkPolicy.KEEP, uploadWorkRequest);
+        WorkManager wm = WorkManager.getInstance();
+
+        ListenableFuture<List<WorkInfo>> status = wm.getWorkInfosByTag("periodicUpload");
+        try {
+            List<WorkInfo> workInfoList = status.get();
+            for (WorkInfo info: workInfoList){
+                System.out.println(info.getState());
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(status);
 
     }
 

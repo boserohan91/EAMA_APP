@@ -123,6 +123,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
         intent.putExtra("groupID", groupID);
 
         startActivity(intent);
+        finish();
     }
 
     @Override
