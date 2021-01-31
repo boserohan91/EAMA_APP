@@ -179,7 +179,7 @@ public class Group extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Unable to load participants. NO internet connection!", Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(), "Unable to load participants. NO internet connection!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -219,7 +219,7 @@ public class Group extends AppCompatActivity {
                         String name = document.getData().get("Name").toString();
                         String uname = document.getData().get("UserName").toString();
                         System.out.println(name+" : "+uname);
-                        participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, name));
+                        participantList.add(new ParticipantHelperClass(R.drawable.profile_avatar, name));
                     }
                     adapter.notifyDataSetChanged();
                 } else {
@@ -229,7 +229,7 @@ public class Group extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Unable to load participants. NO internet connection!", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Unable to load participants. NO internet connection!", Toast.LENGTH_SHORT).show();
             }
         });
 

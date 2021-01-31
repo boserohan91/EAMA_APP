@@ -91,7 +91,7 @@ public class GroupCreation extends AppCompatActivity implements DatePickerDialog
                 else{
                     AddDataGroupDetails(null,1);
                     Toast.makeText(getApplicationContext(), "ALERT: Offline mode enabled! " +
-                            "Group created but not visible to others, unless back online!", Toast.LENGTH_LONG);
+                            "Group created but not visible to others, unless back online!", Toast.LENGTH_LONG).show();
                     open_group(null);
                 }
 

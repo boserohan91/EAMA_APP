@@ -2,6 +2,7 @@ package com.example.spontan;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -65,6 +66,7 @@ public class UploadtoFireWorker extends Worker {
                         String grpID = documentReference.getId();
                         mySQLDb.updateGroupData(UserId, GroupDetails.get( "GroupName").toString(), grpID);
                         System.out.println("Group successfully uploaded to Firebase: "+GroupDetails.get( "GroupName").toString());
+                        Toast.makeText(getApplicationContext(), "Created Group '"+GroupDetails.get("GroupName").toString()+"' successfully published online!!",Toast.LENGTH_LONG);
                     }
                 });
 

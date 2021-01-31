@@ -34,7 +34,7 @@ public class SelectInterest extends  AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.interest_list);
         myDb = Constants.getMyDBHelper(this);
-        email = getIntent().getExtras().getString("email");
+        email = Constants.getUserName();
 
         activityListRecyclerView  = findViewById(R.id.activityrecycleview);
 
@@ -55,14 +55,19 @@ public class SelectInterest extends  AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (String selectedItems:recViewAdapter.selectedActivities)
-                {
-                    AddDataUserInterest(email, selectedItems);
-                    System.out.println(selectedItems);
+                if (recViewAdapter.selectedActivities.size()>=5)
+                    for (String selectedItems:recViewAdapter.selectedActivities)
+                    {
+                        AddDataUserInterest(email, selectedItems);
+                        System.out.println(selectedItems);
+                        open_central();
 
+                    }
+                else{
+                    Toast.makeText(SelectInterest.this, "Please select at least 5 activities", Toast.LENGTH_SHORT).show();
                 }
 
-                open_central();
+
             }
         });
     }

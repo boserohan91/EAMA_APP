@@ -130,7 +130,7 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(context,"Could not join group! No internet connection available!", Toast.LENGTH_SHORT);
+                                    Toast.makeText(context,"Could not join group! No internet connection available!", Toast.LENGTH_SHORT).show();
                                     Log.w("TAG", "Error");
                                 }
                             });
@@ -141,13 +141,13 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
                             context.startActivity(intent);
                         }
                         else{
-                            Toast.makeText(recGroupContext, "You are already a participant! Please check Upcoming Activities", Toast.LENGTH_SHORT);
+                            Toast.makeText(recGroupContext, "You are already a participant! Please check Upcoming Activities", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(recGroupContext, "No Internet Connection. Please retry again later!", Toast.LENGTH_SHORT);
+                        Toast.makeText(recGroupContext, "No Internet Connection. Please retry again later!", Toast.LENGTH_SHORT).show();
                     }
                 });
 

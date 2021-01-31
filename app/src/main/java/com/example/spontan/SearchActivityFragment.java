@@ -102,7 +102,7 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
                     getPlaces();
                 }
                 else{
-                    Toast.makeText(getContext(), "Please select an activity!", Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), "Please select an activity!", Toast.LENGTH_SHORT).show();
                     System.out.println("Please select an activity!");
                 }
 

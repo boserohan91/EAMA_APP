@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w("TAG", "Error");
-                Toast.makeText(getApplicationContext(), "FAILED, Please try again!", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "FAILED, Please try again!", Toast.LENGTH_LONG).show();
             }
         });
         // TODO
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                         else{
                             Toast.makeText(getApplicationContext(),
                                     "User already present with this Email ID! Use different email address!",
-                                    Toast.LENGTH_SHORT);
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext(),
                                 "Network issue! Please check if you are online!",
-                                Toast.LENGTH_SHORT);
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
