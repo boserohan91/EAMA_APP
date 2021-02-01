@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,7 +25,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.*;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Group extends AppCompatActivity {
@@ -89,7 +98,9 @@ public class Group extends AppCompatActivity {
                 }
                 while (res.moveToNext()) {
 
-                    participantList.add(new ParticipantHelperClass(R.drawable.ic_launcher_background, res.getString(0)));
+                    participantList.add(new ParticipantHelperClass(BitmapFactory.decodeFile(getURLForResource(R.drawable.profile_avatar)),
+                            res.getString(0),
+                            res.getString(1)));
 
                 }
 
@@ -171,6 +182,7 @@ public class Group extends AppCompatActivity {
                                 userNames.add(userName);
                             }
                             generateParticipantList(userNames);
+
                         } else {
                             System.out.println("Error getting documents: "+ task.getException());
                         }
@@ -219,9 +231,10 @@ public class Group extends AppCompatActivity {
                         String name = document.getData().get("Name").toString();
                         String uname = document.getData().get("UserName").toString();
                         System.out.println(name+" : "+uname);
-                        participantList.add(new ParticipantHelperClass(R.drawable.profile_avatar, name));
+                        participantList.add(new ParticipantHelperClass(null, name, uname));
                     }
                     adapter.notifyDataSetChanged();
+                    downloadProfileImages(participantList);
                 } else {
                     System.out.println("Error getting documents: "+ task.getException());
                 }
@@ -234,5 +247,47 @@ public class Group extends AppCompatActivity {
         });
 
 
+    }
+
+    private void downloadProfileImages(ArrayList<ParticipantHelperClass> participantList){
+        if (Constants.isConnected() && Constants.isConnectionFast()){
+
+            for(ParticipantHelperClass participant: participantList){
+                StorageReference profileImgRef = FirebaseStorage.getInstance()
+                        .getReference()
+                        .child("profileImage/"+participant.getParticipantUserName());
+                try {
+                    final File localImgFile = File.createTempFile(Constants.getUserName(),"");
+                    profileImgRef.getFile(localImgFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                    Bitmap bitmap = BitmapFactory.decodeFile(localImgFile.getAbsolutePath());
+                                    participant.participantImage = bitmap;
+                                    adapter.notifyDataSetChanged();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+
+
+        }
+
+
+    }
+
+    public String getURLForResource (int resourceId) {
+        //use BuildConfig.APPLICATION_ID instead of R.class.getPackage().getName() if both are not same
+        return Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +resourceId).toString();
     }
 }

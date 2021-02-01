@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context) {
-        super(context, "ActivityFinderF.db",null,1);
+        super(context, "ActivityFinderG.db",null,1);
     }
 
 

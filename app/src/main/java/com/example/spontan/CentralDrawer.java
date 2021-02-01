@@ -50,8 +50,6 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
         myDb = Constants.getMyDBHelper(this);
         drawer = (DrawerLayout) findViewById(R.id.central_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -68,23 +66,6 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
                 name = (TextView) drawerView.findViewById(R.id.textViewNavName);
                 email = (TextView) drawerView.findViewById(R.id.textViewNavEmail);
 
-//                Cursor res = myDb.getFilteredUserData("UserAuth", "username", Constants.getUserName());
-//                if(res.getCount() == -1) {
-//                    // show message
-//                    // showMessage("Error","Nothing found");
-//                    name.setText("");
-//                    email.setText(Constants.getUserName());
-//                    System.out.println("No data in local DB");
-//                    return;
-//                }
-//
-//                //StringBuffer buffer = new StringBuffer();
-//                while (res.moveToNext()) {
-//
-//                    name.setText(res.getString(0));
-//                    email.setText(Constants.getUserName());
-//                }
-
                 email.setText(Constants.getUserName());
                 name.setText(Constants.getName());
             }
@@ -99,9 +80,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
 
             }
         });
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
-//        toggle.syncState();
+
 
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
@@ -122,33 +101,7 @@ public class CentralDrawer extends AppCompatActivity implements NavigationView.O
             }
         });
 
-        BatteryLevelReceiver batteryLevelReceiver = new BatteryLevelReceiver();
-        registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
-        ConnectivityStatusReceiver connectivityStatusReceiver = new ConnectivityStatusReceiver();
-        IntentFilter connectionIntentFilter = new IntentFilter();
-        connectionIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(connectivityStatusReceiver, connectionIntentFilter);
-
-        PeriodicWorkRequest uploadWorkRequest =
-                new PeriodicWorkRequest.Builder(UploadtoFireWorker.class,2, TimeUnit.MINUTES)
-                        .build();
-
-        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("periodicUpload", ExistingPeriodicWorkPolicy.KEEP, uploadWorkRequest);
-        WorkManager wm = WorkManager.getInstance();
-
-        ListenableFuture<List<WorkInfo>> status = wm.getWorkInfosByTag("periodicUpload");
-        try {
-            List<WorkInfo> workInfoList = status.get();
-            for (WorkInfo info: workInfoList){
-                System.out.println(info.getState());
-            }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(status);
 
     }
 

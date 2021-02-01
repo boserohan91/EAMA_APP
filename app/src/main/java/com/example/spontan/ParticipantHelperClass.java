@@ -1,20 +1,26 @@
 package com.example.spontan;
 
+import android.graphics.Bitmap;
+
 public class ParticipantHelperClass {
 
-    int participantImage;
+    public Bitmap participantImage;
     String participantName;
+    String participantUserName;
 
-    public ParticipantHelperClass(int participantImage, String participantName) {
+    public ParticipantHelperClass(Bitmap participantImage, String participantName, String participantUserName) {
         this.participantImage = participantImage;
         this.participantName = participantName;
+        this.participantUserName = participantUserName;
     }
 
-    public int getParticipantImage() {
+    public Bitmap getParticipantImage() {
         return participantImage;
     }
 
     public String getParticipantName() {
         return participantName;
     }
+
+    public String getParticipantUserName() {return participantUserName;}
 }

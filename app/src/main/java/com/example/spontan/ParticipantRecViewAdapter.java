@@ -30,8 +30,9 @@ public class ParticipantRecViewAdapter extends RecyclerView.Adapter<ParticipantR
     @Override
     public void onBindViewHolder(@NonNull ParticipantViewHolder holder, int position) {
         ParticipantHelperClass participantHelperClass = participantList.get(position);
-        holder.participantImage.setImageResource(participantHelperClass.getParticipantImage());
         holder.participantName.setText(participantHelperClass.getParticipantName());
+        if (participantHelperClass.getParticipantUserName()!=null)
+            holder.participantImage.setImageBitmap(participantHelperClass.getParticipantImage());
     }
 
     @Override

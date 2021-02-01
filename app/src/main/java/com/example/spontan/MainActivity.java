@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         this.deleteDatabase("ActivityFinderC.db");
         this.deleteDatabase("ActivityFinderD.db");
         this.deleteDatabase("ActivityFinderE.db");
+        this.deleteDatabase("ActivityFinderF.db");
 
 
         editNamed = (EditText)findViewById(R.id.editTextTextName) ;
@@ -80,10 +81,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         Constants.buildActivityHashMap();
+
+        BatteryLevelReceiver batteryLevelReceiver = new BatteryLevelReceiver();
+        registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+        ConnectivityStatusReceiver connectivityStatusReceiver = new ConnectivityStatusReceiver();
+        IntentFilter connectionIntentFilter = new IntentFilter();
+        connectionIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectivityStatusReceiver, connectionIntentFilter);
+
+        PeriodicWorkRequest uploadWorkRequest =
+                new PeriodicWorkRequest.Builder(UploadtoFireWorker.class,2, TimeUnit.MINUTES)
+                        .build();
+
+        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("periodicUpload", ExistingPeriodicWorkPolicy.KEEP, uploadWorkRequest);
+        WorkManager wm = WorkManager.getInstance();
+
+        ListenableFuture<List<WorkInfo>> status = wm.getWorkInfosByTag("periodicUpload");
+        try {
+            List<WorkInfo> workInfoList = status.get();
+            for (WorkInfo info: workInfoList){
+                System.out.println(info.getState());
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(status);
 
 
 
@@ -102,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignIn.class);
 
         startActivity(intent);
+        finish();
     }
 
     public  void AddDataUserAuth() {
