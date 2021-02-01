@@ -1,5 +1,6 @@
 package com.example.spontan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,7 +11,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SelectInterest extends  AppCompatActivity {
 
@@ -19,6 +26,7 @@ public class SelectInterest extends  AppCompatActivity {
     RecyclerView activityListRecyclerView;
     DbHelper myDb;
     TextView next;
+    FirebaseFirestore db;
 
     @Override
     public void onBackPressed() {
@@ -55,14 +63,9 @@ public class SelectInterest extends  AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (recViewAdapter.selectedActivities.size()>=5)
-                    for (String selectedItems:recViewAdapter.selectedActivities)
-                    {
-                        AddDataUserInterest(email, selectedItems);
-                        System.out.println(selectedItems);
-                        open_central();
-
-                    }
+                if (recViewAdapter.selectedActivities.size()>=5) {
+                    AddFire();
+                }
                 else{
                     Toast.makeText(SelectInterest.this, "Please select at least 5 activities", Toast.LENGTH_SHORT).show();
                 }
@@ -71,6 +74,35 @@ public class SelectInterest extends  AppCompatActivity {
             }
         });
     }
+
+    public void AddFire(){
+        db = FirebaseFirestore.getInstance();
+        HashMap<String, ArrayList<String>> interests = new HashMap<>();
+        interests.put("interests", recViewAdapter.selectedActivities);
+        db.collection("Interests")
+                .document(Constants.getUserName())
+                .set(interests)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        for (String selectedItems:recViewAdapter.selectedActivities)
+                        {
+                            AddDataUserInterest(email, selectedItems);
+                            System.out.println(selectedItems);
+                            open_central();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(SelectInterest.this, "Could not upload Interests, please try again later!", Toast.LENGTH_SHORT);
+                    }
+                });
+
+
+    }
+
     public  void AddDataUserInterest(String email, String interest) {
 
         boolean isInserted = myDb.insertDataUserInterest(email, interest);

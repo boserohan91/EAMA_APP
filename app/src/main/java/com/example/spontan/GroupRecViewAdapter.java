@@ -40,7 +40,7 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
     @NonNull
     @Override
     public GroupRecViewAdapter.GroupListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_card_design,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rec_group_card_design,parent,false);
         GroupRecViewAdapter.GroupListHolder groupListHolder = new GroupRecViewAdapter.GroupListHolder(view);
         return groupListHolder;
     }
@@ -50,7 +50,9 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
         GroupHelperClass groupHelperClass = groupList.get(position);
         holder.groupName.setText(groupHelperClass.getGroupName());
         holder.locationName.setText(groupHelperClass.getLocationName());
+        holder.locationAddress.setText(groupHelperClass.getLocAddr());
         holder.activityName.setText(groupHelperClass.getActivityName());
+        holder.dateTime.setText(groupHelperClass.getDate()+" "+groupHelperClass.getTime());
     }
 
     @Override
@@ -64,15 +66,19 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
         TextView groupName;
         TextView locationName;
         TextView activityName;
+        TextView locationAddress;
+        TextView dateTime;
         ImageButton grpJoinBtn;
 
         public GroupListHolder(@NonNull View itemView) {
             super(itemView);
 
-            locationName = itemView.findViewById(R.id.locationAddress);
-            groupName = itemView.findViewById(R.id.locationName);
-            activityName = itemView.findViewById(R.id.locationDescription);
-            grpJoinBtn = itemView.findViewById(R.id.locationGrpCreateBtn);
+            locationName = itemView.findViewById(R.id.recGrplocationName);
+            groupName = itemView.findViewById(R.id.recGrpGroupName);
+            activityName = itemView.findViewById(R.id.recGrpActivityName);
+            locationAddress = itemView.findViewById(R.id.recGrplocationAddress);
+            grpJoinBtn = itemView.findViewById(R.id.recGrpJoinBtn);
+            dateTime = itemView.findViewById(R.id.recGrpDateTime);
 
             grpJoinBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

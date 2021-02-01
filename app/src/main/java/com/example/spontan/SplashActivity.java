@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         TextView spontan = findViewById(R.id.splashText);
-        spontan.setRotation(320);
+        spontan.setRotation(340);
 
 
 

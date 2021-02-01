@@ -6,12 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +32,7 @@ public class RecommendedActivityFragment extends Fragment {
     public ArrayList<String> recommendedList;
     RecyclerView recommendedRecyclerView;
     public ArrayList<String> otherRecActivities = new ArrayList<String>();
+    WeatherCondition weatherCondition;
 
     @Nullable
     @Override
@@ -66,7 +73,7 @@ public class RecommendedActivityFragment extends Fragment {
         new ServerClass().sendGETRequest(getContext(), URL, new ServerResponseCallback() {
             @Override
             public void onJSONResponse(JSONObject jsonObject) {
-                WeatherCondition weatherCondition = new WeatherCondition();
+                weatherCondition = new WeatherCondition();
                 try{
                     JSONObject main_object = jsonObject.getJSONObject("main");
                     JSONArray array = jsonObject.getJSONArray("weather");
@@ -124,7 +131,8 @@ public class RecommendedActivityFragment extends Fragment {
                 System.out.println("Snow 3h: " + weatherCondition.snow3h);
                 System.out.println("Rain 1h: " + weatherCondition.rain1h);
                 System.out.println("Rain 3h: " + weatherCondition.rain3h);
-                recommendedActivityBuilder(weatherCondition);
+                getInterests();
+
 
             }
 
@@ -140,17 +148,16 @@ public class RecommendedActivityFragment extends Fragment {
         });
     }
 
-    public void recommendedActivityBuilder(WeatherCondition weatherCondition){
+    public void recommendedActivityBuilder(ArrayList<String> userInterests){
 
         System.out.println("Inside recommendedActivityBuilder");
 
-        // main = [ "Rain", "Snow", "Clear", "Clouds"]
         Set<String> recommendedActivities = new HashSet<>(Constants.activities.keySet());
-        //recommendedActivities = new ArrayList<String>(activityKeySet);
-        System.out.println(recommendedActivities);
+
+        System.out.println("All activities: "+recommendedActivities);
 
         // extract from database all user interests
-        ArrayList<String> userInterests = new ArrayList<String>(recommendedActivities);
+        //ArrayList<String> userInterests = new ArrayList<String>(recommendedActivities);
         System.out.println("User Interests: "+ userInterests);
         System.out.println("Weather Main condition inside recommendedActivityBuilder: "+weatherCondition.main );
 
@@ -188,20 +195,56 @@ public class RecommendedActivityFragment extends Fragment {
         //display other recommended activities too
         System.out.println("Recommended Activities left: "+recommendedActivities);
 
-        for (String activity: userInterests){
+        recommendedList = new ArrayList<String>();
+
+        if(userInterests.contains("Football"))
+            userInterests.add("Indoor Football");
+        if(userInterests.contains("Basketball"))
+            userInterests.add("Indoor Basketball");
+        if( userInterests.contains("Badminton"))
+            userInterests.add("Indoor Badminton");
+
+        for (String activity: recommendedActivities){
             System.out.println(activity);
-            if (!(recommendedActivities.contains(activity))){
-                recommendedActivities.remove(activity);
+            if (userInterests.contains(activity)){
+                recommendedList.add(activity);
+
+                System.out.println("Activity added: "+ activity);
+            }
+            else{
                 otherRecActivities.add(activity);
-                System.out.println("Activity removed: "+ activity);
+                System.out.println("Other recommended activity added: "+activity);
             }
         }
 
-        recommendedList = new ArrayList<String>(recommendedActivities);
 
         RecommendedRecViewAdapter recommendedRecViewAdapter = new RecommendedRecViewAdapter(getContext(), getActivity() ,recommendedList);
         recommendedRecyclerView.setAdapter(recommendedRecViewAdapter);
         recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        }
+
+        public void getInterests(){
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("Interests")
+                    .document(Constants.getUserName())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            final ArrayList<String> interestList = (ArrayList<String>) documentSnapshot.getData().get("interests");
+                            System.out.println("InterestList: "+interestList);
+                            recommendedActivityBuilder(interestList);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), "Could not retrieve your interests!", Toast.LENGTH_SHORT);
+                            //check local db for interests
+                        }
+                    });
 
         }
 

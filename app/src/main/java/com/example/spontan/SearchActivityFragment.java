@@ -113,7 +113,7 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
         if(!(activitySpinner.getSelectedItem().toString().equals("None"))){
             searchActivityBtn.performClick();
         }
-        // also return all the open groups for the activity
+
     }
 
     public void getPlaces(){

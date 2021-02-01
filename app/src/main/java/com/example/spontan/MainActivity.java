@@ -171,8 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "FAILED, Please try again!", Toast.LENGTH_LONG).show();
             }
         });
-        // TODO
-        // user auth updates to Firebase
+
     }
 
     public void checkUserIDHasJoinedElseAdd(){
