@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -51,19 +52,21 @@ public class MyLocationListener implements LocationListener {
 
             if (Constants.isBatteryLevelLow()){
                 isGPSEnabled = false;
+                Toast.makeText(mContext, "GPS disabled due to low battery!", Toast.LENGTH_SHORT).show();
             }
 
             if (isGPSEnabled == false && isNetworkEnabled == false) {
-
+                Toast.makeText(mContext, "GPS or Network Provided location not available, please check settings",Toast.LENGTH_SHORT).show();
             } else {
                 // use network location provider or gps based on battery level & connectivity
-                this.canGetLocation = true;
+
                 if (isNetworkEnabled) {
                     getLocFromNetwork();
                 }
                 if (isGPSEnabled) {
                     getLocFromGPS();
                 }
+                this.canGetLocation = true;
             }
 
         }

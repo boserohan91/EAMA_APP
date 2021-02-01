@@ -51,12 +51,22 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put("username",username);
         contentValues.put("password", password);
         contentValues.put("contact", contact);
-        long result = DB.insert("UserAuth",null ,contentValues);
+        long result=0;
+        try{
+            result = DB.insertOrThrow("UserAuth",null ,contentValues);
+
+        }
+        catch(Throwable e){
+            System.out.println("Data already exists in table");
+        }
+
         if(result == -1)
             return false;
         else
             return true;
+
     }
+
     public boolean insertDataUserInterest(String email, String interest){
 
         SQLiteDatabase DB = this.getWritableDatabase();

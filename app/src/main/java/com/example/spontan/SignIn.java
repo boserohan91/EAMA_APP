@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+
+import java.sql.SQLException;
 
  public class SignIn extends AppCompatActivity {
     private TextView signUpClick;
@@ -62,6 +65,8 @@ import com.google.firebase.storage.FirebaseStorage;
     }
 
     public void checkUserIDExists(){
+
+        DbHelper myDb = Constants.getMyDBHelper(SignIn.this);
         db.collection("User")
                 .whereEqualTo("UserName", username.getText().toString())
                 .whereEqualTo("Password", password.getText().toString())
@@ -76,8 +81,18 @@ import com.google.firebase.storage.FirebaseStorage;
                         }
                         else{
                             for (QueryDocumentSnapshot document: (QuerySnapshot) queryDocumentSnapshots){
-                                name = document.getData().get("Name").toString();
-                                Constants.setName(name);
+
+                                Constants.setName(document.getData().get("Name").toString());
+                                try{
+                                    myDb.insertDataUserAuth(document.getData().get("Name").toString(),
+                                            document.getData().get("UserName").toString(),
+                                            "",
+                                            Integer.parseInt(document.getData().get("Contact").toString()) );
+                                }
+                                catch(Throwable e){
+                                    System.out.println("User already exists in local DB");
+                                }
+
                             }
                             open_central();
                             Constants.setUserName(username.getText().toString());

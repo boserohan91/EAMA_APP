@@ -18,7 +18,24 @@ public class Constants {
     public final static String placesAPIKey = "AIzaSyCKg9LOk3ikF3sQB42HRIXGBvHCuZoCZ8o";
 
     //Hash Map of Activities to nearby searched locations
-    public static HashMap<String,String> activities = new HashMap<String,String>();
+    public static HashMap<String,String> activities = new HashMap<String,String>() {{
+        put("Biking", "Biking");
+        put("Hiking", "Hiking");
+        put("Football", "Football Court");
+        put("Indoor Football", "Indoor Football Court");
+        put("Badminton", "Badminton Court");
+        put("Indoor Badminton", "Indoor Badminton Court");
+        put("Basketball", "Basketball Court");
+        put("Indoor Basketball", "Indoor Basketball Court");
+        put("Dancing", "Dance Schools");
+        put("Swimming", "Swimming Pool");
+        put("Movies", "Movie Hall");
+        put("Cooking", "Cooking");
+        put("Food Explorer", "Restaurants");
+        put("Clubbing", "Clubs");
+        put("Concerts", "Concerts");
+        put("Theatre", "Theatre Hall");
+    }};
 
     public static DbHelper myDBHelper;
     public static boolean connected = true;
@@ -73,8 +90,11 @@ public class Constants {
         activities.put("Biking", "Biking");
         activities.put("Hiking", "Hiking");
         activities.put("Football", "Football Court");
+        activities.put("Indoor Football", "Indoor Football Court");
         activities.put("Badminton", "Badminton Court");
+        activities.put("Indoor Badminton", "Indoor Badminton Court");
         activities.put("Basketball", "Basketball Court");
+        activities.put("Indoor Basketball", "Indoor Basketball Court");
         activities.put("Dancing", "Dance Schools");
         activities.put("Swimming", "Swimming Pool");
         activities.put("Movies", "Movie Hall");

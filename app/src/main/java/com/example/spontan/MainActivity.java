@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Constants.buildActivityHashMap();
+       // Constants.buildActivityHashMap();
 
         BatteryLevelReceiver batteryLevelReceiver = new BatteryLevelReceiver();
         registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         UserDetails.put("Name", editNamed.getText().toString());
         UserDetails.put("UserName", editUserName.getText().toString());
         UserDetails.put("Password", editPass.getText().toString());
+        UserDetails.put("Contact", editContact.getText().toString());
 
 
         db.collection("User")

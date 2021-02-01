@@ -63,6 +63,13 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
         for (String activity: activities){
             activityList.add(activity);
         }
+        try{
+            if (activityText.contains("Indoor"))
+                activityList.add(activityText);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
         activitySpinner = (Spinner) view.findViewById(R.id.spinnerSearchActivity);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, activityList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

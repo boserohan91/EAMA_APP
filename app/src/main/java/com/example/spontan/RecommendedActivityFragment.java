@@ -68,8 +68,8 @@ public class RecommendedActivityFragment extends Fragment {
             System.out.println("Cannot get location!");
         }
 
-        String URL = Constants.owmURL+"q=Dresden,Germany&appid="+Constants.owmAPIKey+"&units=metric";
-        //String URL = Constants.owmURL+"lat="+latitude+"&lon="+longitude+"&appid="+Constants.owmAPIKey+"&units=metric";
+        //String URL = Constants.owmURL+"q=Dresden,Germany&appid="+Constants.owmAPIKey+"&units=metric";
+        String URL = Constants.owmURL+"lat="+latitude+"&lon="+longitude+"&appid="+Constants.owmAPIKey+"&units=metric";
         new ServerClass().sendGETRequest(getContext(), URL, new ServerResponseCallback() {
             @Override
             public void onJSONResponse(JSONObject jsonObject) {
@@ -152,7 +152,14 @@ public class RecommendedActivityFragment extends Fragment {
 
         System.out.println("Inside recommendedActivityBuilder");
 
-        Set<String> recommendedActivities = new HashSet<>(Constants.activities.keySet());
+        String[] activities=getResources().getStringArray(R.array.activities);
+        Set<String> recommendedActivities = new HashSet<>();
+
+        for (String activity: activities){
+            recommendedActivities.add(activity);
+        }
+
+
 
         System.out.println("All activities: "+recommendedActivities);
 
@@ -168,14 +175,14 @@ public class RecommendedActivityFragment extends Fragment {
             recommendedActivities.remove("Badminton");
             recommendedActivities.remove("Basketball");
             recommendedActivities.add("Indoor Badminton");
-            Constants.activities.put("Indoor Badminton", "Indoor Badminton Court");
+            //Constants.activities.put("Indoor Badminton", "Indoor Badminton Court");
             recommendedActivities.add("Indoor Basketball");
-            Constants.activities.put("Indoor Basketball", "Indoor Basketball Court");
+            //Constants.activities.put("Indoor Basketball", "Indoor Basketball Court");
             if (weatherCondition.main.equals("Snow")){
                 if(weatherCondition.snow3h > 50 || weatherCondition.snow1h > 25){
                     recommendedActivities.remove("Football");
                     recommendedActivities.add("Indoor Football");
-                    Constants.activities.put("Indoor Football", "Indoor Football Court");
+                    //Constants.activities.put("Indoor Football", "Indoor Football Court");
 
                 }
             }
@@ -188,7 +195,7 @@ public class RecommendedActivityFragment extends Fragment {
             if(weatherCondition.windspeed > 10){
                 recommendedActivities.remove("Badminton");
                 recommendedActivities.add("Indoor Badminton");
-                Constants.activities.put("Indoor Badminton", "Indoor Badminton Court");
+                //Constants.activities.put("Indoor Badminton", "Indoor Badminton Court");
             }
             }
         // compare recommendedActivities with InterestList and show only the common of both the sets

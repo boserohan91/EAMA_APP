@@ -101,7 +101,7 @@ public class ProfileFragment extends Fragment {
         // retrieve profile data from DB
 
 
-        // from local DB
+//        // from local DB
         Cursor res = myDb.getFilteredUserData("UserAuth", "username", Constants.getUserName());
         if(res.getCount() == 0) {
             // show message
@@ -112,7 +112,6 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        StringBuffer buffer = new StringBuffer();
         while (res.moveToNext()) {
 
             TextView name = (TextView) view.findViewById(R.id.textViewName);
@@ -123,12 +122,9 @@ public class ProfileFragment extends Fragment {
             email.setText(Constants.getUserName());
             contact.setText(res.getString(3));
 
-            buffer.append("username :"+ res.getString(0)+"\n");
-            buffer.append("email:"+ res.getString(1)+"\n");
-            buffer.append("contact :"+ res.getString(3)+"\n");
 
         }
-        System.out.println(buffer);
+
     }
 
     public void chooseImage(){
