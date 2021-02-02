@@ -1,11 +1,15 @@
 package com.example.spontan;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,11 +29,12 @@ import java.util.ArrayList;
 
 public class UpcomingActivityFragment extends Fragment {
 
-    public static ArrayList<GroupHelperClass> upcomingList = new ArrayList<>();
+    public static ArrayList<GroupHelperClass> upcomingList;
     RecyclerView upcomingRecycler;
     UpcomingRecViewAdapter upcomingAdapter;
     FirebaseFirestore db;
     DbHelper myDb;
+    ProgressBar spinnerBar;
 
     @Nullable
     @Override
@@ -41,6 +46,15 @@ public class UpcomingActivityFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+//        upcomingList.clear();
+//        if(locationsAdapter!=null){
+//            locationsAdapter.locationsList.clear();
+//            locationsAdapter.notifyDataSetChanged();
+//        }
+        upcomingList = new ArrayList<>();
+        spinnerBar = (ProgressBar) view.findViewById(R.id.progressBarUpcoming);
+        spinnerBar.setVisibility(View.VISIBLE);
         db = FirebaseFirestore.getInstance();
         upcomingRecycler = view.findViewById(R.id.upcomingRecyclerView);
         upcomingRecycler.setHasFixedSize(true);
@@ -84,6 +98,7 @@ public class UpcomingActivityFragment extends Fragment {
             });
         }
         else{
+            System.out.println("Getting data from local DB");
             getDataFromDB();
         }
     }
@@ -105,9 +120,14 @@ public class UpcomingActivityFragment extends Fragment {
                                 String time = document.getData().get("Time").toString();
                                 double lat = Double.parseDouble(document.getData().get("Lat").toString());
                                 double lon = Double.parseDouble(document.getData().get("Lon").toString());
-                                upcomingList.add(new GroupHelperClass(document.getId(), groupName, locName, locAddr, activityName, date, time, lat, lon));
+                                GroupHelperClass group = new GroupHelperClass(document.getId(), groupName, locName, locAddr, activityName, date, time, lat, lon);
+                                upcomingList.add(group);
+                                checkGroupsNotUploaded(getContext());
+                                AddGroupToSQLite(group, getContext());
+
                             }
                             upcomingAdapter.notifyDataSetChanged();
+                            spinnerBar.setVisibility(View.GONE);
                         } else {
                             System.out.println("Error getting documents: "+ task.getException());
                             System.out.println("Getting data from DB");
@@ -126,8 +146,59 @@ public class UpcomingActivityFragment extends Fragment {
     }
 
     public void getDataFromDB(){
+
         myDb = Constants.getMyDBHelper(getContext());
+        myDb.deleteDuplicatesGroupDetails("GroupDetails");
         Cursor res = myDb.getFilteredData("GroupDetails", "UserId", Constants.getUserName());
+        if(res.getCount() == 0) {
+            // show message
+            // showMessage("Error","Nothing found");
+            Toast.makeText(getContext(), "Unable to retrieve upcoming activities!", Toast.LENGTH_SHORT).show();
+            spinnerBar.setVisibility(View.GONE);
+            System.out.println("No data");
+            return;
+        }
+        while (res.moveToNext()) {
+            if(res.getString(10).equals("1")){
+                upcomingList.add(new GroupHelperClass(res.getString(1),
+                        res.getString(2)+" (not yet uploaded)", res.getString(4),
+                        res.getString(5), res.getString(3),
+                        res.getString(6), res.getString(7),
+                        0.0, 0.0));
+            }
+            else{
+                upcomingList.add(new GroupHelperClass(res.getString(1),
+                        res.getString(2), res.getString(4),
+                        res.getString(5), res.getString(3),
+                        res.getString(6), res.getString(7),
+                        0.0, 0.0));
+            }
+
+
+        }
+        upcomingAdapter.notifyDataSetChanged();
+        spinnerBar.setVisibility(View.GONE);
+    }
+
+    public void AddGroupToSQLite(GroupHelperClass group, Context context){
+
+        myDb =  Constants.getMyDBHelper(context);
+        try{
+            boolean isInserted = myDb.insertDataGroupCreation(Constants.getUserName(),
+                    group.grpID,group.groupName, group.activityName ,
+                    group.locationName, group.locAddr, group.date,group.time, group.lat, group.lon, 0  );
+
+        }
+        catch(SQLiteConstraintException e){
+            e.printStackTrace();
+            System.out.println("Group already exists in SQLite DB");
+        }
+
+    }
+
+    public void checkGroupsNotUploaded(Context context){
+        myDb = Constants.getMyDBHelper(context);
+        Cursor res = myDb.getFilteredData("GroupDetails", "flag", "1");
         if(res.getCount() == 0) {
             // show message
             // showMessage("Error","Nothing found");
@@ -135,14 +206,16 @@ public class UpcomingActivityFragment extends Fragment {
             return;
         }
         while (res.moveToNext()) {
+            if (Constants.getUserName().equals(res.getString(0))){
+                upcomingList.add(new GroupHelperClass(res.getString(1),
+                        res.getString(2)+"(not yet uploaded)", res.getString(4),
+                        res.getString(5), res.getString(3),
+                        res.getString(6), res.getString(7),
+                        0.0, 0.0));
+            }
 
-            upcomingList.add(new GroupHelperClass(res.getString(1),
-                    res.getString(2), res.getString(4),
-                    res.getString(5), res.getString(3),
-                    res.getString(6), res.getString(7),
-                    0.0, 0.0));
+            upcomingAdapter.notifyDataSetChanged();
 
         }
-        upcomingAdapter.notifyDataSetChanged();
     }
 }

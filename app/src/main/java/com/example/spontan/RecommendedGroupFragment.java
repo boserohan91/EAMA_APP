@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 
@@ -67,10 +68,12 @@ public class RecommendedGroupFragment extends Fragment {
         minLatitude = latitude - 0.1;
         maxLongitude = longitude + 0.1;
         minLongitude = longitude - 0.1;
+        System.out.println("Max Longitude: "+maxLongitude);
+        System.out.println("Min Longitude: "+minLongitude);
         CollectionReference groupRef = db.collection("GroupDetails");
         Query query = groupRef.whereLessThanOrEqualTo("Lon", maxLongitude)
                 .whereGreaterThanOrEqualTo("Lon", minLongitude);
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        query.get(Source.SERVER).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -84,7 +87,7 @@ public class RecommendedGroupFragment extends Fragment {
                         String date = document.getData().get("Date").toString();
                         double lon = Double.parseDouble(document.getData().get("Lon").toString());
                         double lat = Double.parseDouble(document.getData().get("Lat").toString());
-
+                        System.out.println("Group retrieved: "+groupName);
                         if (lat<=maxLatitude && lat>=minLatitude){
                             GroupHelperClass group =new GroupHelperClass(document.getId(), groupName, locName, locAddr, activityName, date, time, lat, lon);
                             groupsList.add(group);

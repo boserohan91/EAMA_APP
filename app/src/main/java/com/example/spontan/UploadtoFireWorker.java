@@ -66,7 +66,8 @@ public class UploadtoFireWorker extends Worker {
                         String grpID = documentReference.getId();
                         mySQLDb.updateGroupData(UserId, GroupDetails.get( "GroupName").toString(), grpID);
                         System.out.println("Group successfully uploaded to Firebase: "+GroupDetails.get( "GroupName").toString());
-                        Toast.makeText(getApplicationContext(), "Created Group '"+GroupDetails.get("GroupName").toString()+"' successfully published online!!",Toast.LENGTH_LONG);
+                        Toast.makeText(getApplicationContext(), "Created Group '"+GroupDetails.get("GroupName").toString()+"' successfully published online!!",Toast.LENGTH_LONG).show();
+                        addParticipantToFire(UserId, grpID);
                     }
                 });
 
@@ -76,5 +77,20 @@ public class UploadtoFireWorker extends Worker {
 
         }
 
+    }
+
+    public void addParticipantToFire(String UserID, String GrpID){
+        HashMap<String,String> participant = new HashMap<>();
+        participant.put("GroupID", GrpID);
+        participant.put("UserName", UserID);
+
+        db.collection("Participants")
+                .add(participant)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        System.out.println("Owner of group added to Participants in Firestore");
+                    }
+                });
     }
 }

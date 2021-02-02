@@ -115,6 +115,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public void deleteDuplicatesGroupDetails( String tableName){
+
+        SQLiteDatabase DB = this.getWritableDatabase();
+        DB.execSQL( "DELETE FROM " + tableName + " WHERE rowid NOT IN ( SELECT MIN(rowid) FROM " + tableName + " GROUP BY UserId, GroupName, ActivityName)");
+
+    }
+
 
     public Cursor getAllData(String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();

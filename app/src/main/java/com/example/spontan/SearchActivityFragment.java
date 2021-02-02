@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
     String activityText;
     public Button searchActivityBtn;
     String[] activities;
+    ProgressBar spinnerBar;
 
     @Nullable
     @Override
@@ -46,6 +48,8 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
 
 
         View view = inflater.inflate(R.layout.search_activity, container, false);
+        spinnerBar = view.findViewById(R.id.progressBarSearch);
+        spinnerBar.setVisibility(View.GONE);
         System.out.println("Locations List 1: "+locationsList);
         locationsRecycler = view.findViewById(R.id.locationsRecyclerView);
         locationsRecycler.setHasFixedSize(true);
@@ -101,6 +105,8 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
         searchActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                spinnerBar = view.findViewById(R.id.progressBarSearch);
+                spinnerBar.setVisibility(View.VISIBLE);
                 if(!(activitySpinner.getSelectedItem().toString().equals("None"))){
                     locationsList.clear();
                     locationsAdapter.locationsList.clear();
@@ -113,7 +119,7 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
                     System.out.println("Please select an activity!");
                 }
 
-
+                spinnerBar.setVisibility(View.GONE);
             }
         });
 
@@ -154,7 +160,7 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
 
             @Override
             public void onError(Exception e) {
-
+                spinnerBar.setVisibility(View.GONE);
             }
         });
 
@@ -179,11 +185,13 @@ public class SearchActivityFragment extends Fragment implements RecommendedActiv
             }
         } catch (JSONException e){
             e.printStackTrace();
+            spinnerBar.setVisibility(View.GONE);
         }
         finally {
             locationsAdapter.locationsList.addAll(locationsList);
 
             locationsAdapter.notifyDataSetChanged();
+            spinnerBar.setVisibility(View.GONE);
         }
 
 

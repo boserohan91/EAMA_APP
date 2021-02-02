@@ -100,10 +100,7 @@ public class GroupRecViewAdapter extends RecyclerView.Adapter<GroupRecViewAdapte
             boolean isInserted = myDb.insertDataGroupCreation(Constants.getUserName(),
                     group.grpID,group.groupName, group.activityName ,
                     group.locationName, group.locAddr, group.date,group.time, group.lat, group.lon, 0  );
-            if(isInserted == true)
-                Toast.makeText(context,"Data Inserted",Toast.LENGTH_LONG).show();
-            else
-                Toast.makeText(context,"Data not Inserted",Toast.LENGTH_LONG).show();
+            
         }
         catch(SQLiteConstraintException e){
             e.printStackTrace();
