@@ -55,8 +55,8 @@ public class UploadtoFireWorker extends Worker {
                 GroupDetails.put("LocAddr", res.getString(5));
                 GroupDetails.put("Date", res.getString(6));
                 GroupDetails.put("Time", res.getString(7));
-                GroupDetails.put("Lat", res.getString(8));
-                GroupDetails.put("Lon", res.getString(9));
+                GroupDetails.put("Lat", Double.parseDouble(res.getString(8)));
+                GroupDetails.put("Lon", Double.parseDouble(res.getString(9)));
 
                 db.collection("GroupDetails")
                         .add(GroupDetails)
